@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Anuradha Hardware</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Top Bar (Same as index.html) -->
+    <!-- Header (Same as index.html) -->
+    <!-- Navigation (Same as index.html) -->
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Register</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Register</li>
+                </ol>
+            </nav>
+        </div>
+    </section>
+
+    <!-- Register Section -->
+    <section class="register-section">
+        <div class="container">
+            <div class="register-container">
+                <div class="register-form">
+                    <h2>Create an Account</h2>
+                    <form id="registerForm">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="reg-first-name">First Name *</label>
+                                <input type="text" id="reg-first-name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="reg-last-name">Last Name *</label>
+                                <input type="text" id="reg-last-name" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="reg-email">Email Address *</label>
+                            <input type="email" id="reg-email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="reg-phone">Phone Number *</label>
+                            <input type="tel" id="reg-phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="reg-password">Password *</label>
+                            <input type="password" id="reg-password" required>
+                            <div class="password-strength">
+                                <span class="strength-weak">Weak</span>
+                                <div class="strength-meter">
+                                    <span class="strength-bar weak"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="reg-confirm-password">Confirm Password *</label>
+                            <input type="password" id="reg-confirm-password" required>
+                        </div>
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" id="accept-terms" required>
+                            <label for="accept-terms">I agree to the <a href="terms.html">Terms and Conditions</a> and <a href="privacy.html">Privacy Policy</a> *</label>
+                        </div>
+                        <div class="form-group checkbox-group">
+                            <input type="checkbox" id="subscribe-newsletter">
+                            <label for="subscribe-newsletter">Subscribe to our newsletter</label>
+                        </div>
+                        <button type="submit" class="btn btn-block">Register</button>
+                    </form>
+                    <div class="login-link">
+                        Already have an account? <a href="login.html">Login here</a>
+                    </div>
+                </div>
+                <div class="register-benefits">
+                    <h3>Why Register With Us?</h3>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-truck"></i>
+                        </div>
+                        <div class="benefit-content">
+                            <h4>Fast & Easy Checkout</h4>
+                            <p>Save your details for faster purchases in the future.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-history"></i>
+                        </div>
+                        <div class="benefit-content">
+                            <h4>Order History</h4>
+                            <p>Track your orders and view your purchase history.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-heart"></i>
+                        </div>
+                        <div class="benefit-content">
+                            <h4>Wishlist</h4>
+                            <p>Save your favorite products for later.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-percentage"></i>
+                        </div>
+                        <div class="benefit-content">
+                            <h4>Exclusive Offers</h4>
+                            <p>Get access to special discounts and promotions.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter (Same as index.html) -->
+    <!-- Footer (Same as index.html) -->
+
+    <script src="js/main.js"></script>
+    <script src="js/register.js"></script>
+</body>
+</html>

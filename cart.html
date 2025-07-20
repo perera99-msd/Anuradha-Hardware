@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - Anuradha Hardware</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Top Bar (Same as index.html) -->
+    <!-- Header (Same as index.html) -->
+    <!-- Navigation (Same as index.html) -->
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Shopping Cart</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Shopping Cart</li>
+                </ol>
+            </nav>
+        </div>
+    </section>
+
+    <!-- Cart Section -->
+    <section class="cart">
+        <div class="container">
+            <div class="cart-content">
+                <!-- Cart Items -->
+                <div class="cart-items">
+                    <div class="cart-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="product-info">
+                                        <div class="product-image">
+                                            <img src="images/products/drill.jpg" alt="Product">
+                                        </div>
+                                        <div class="product-details">
+                                            <h4><a href="product-detail.html">18V Cordless Drill Set</a></h4>
+                                            <div class="product-sku">SKU: DRILL-18V-2023</div>
+                                        </div>
+                                    </td>
+                                    <td class="product-price">Rs. 12,500.00</td>
+                                    <td class="product-quantity">
+                                        <div class="quantity-selector">
+                                            <button class="quantity-btn minus"><i class="fas fa-minus"></i></button>
+                                            <input type="number" value="1" min="1">
+                                            <button class="quantity-btn plus"><i class="fas fa-plus"></i></button>
+                                        </div>
+                                    </td>
+                                    <td class="product-total">Rs. 12,500.00</td>
+                                    <td class="product-remove">
+                                        <button class="remove-btn"><i class="fas fa-times"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="product-info">
+                                        <div class="product-image">
+                                            <img src="images/products/hammer.jpg" alt="Product">
+                                        </div>
+                                        <div class="product-details">
+                                            <h4><a href="product-detail.html">Professional Hammer 16oz</a></h4>
+                                            <div class="product-sku">SKU: HAMMER-PRO-16</div>
+                                        </div>
+                                    </td>
+                                    <td class="product-price">Rs. 1,850.00</td>
+                                    <td class="product-quantity">
+                                        <div class="quantity-selector">
+                                            <button class="quantity-btn minus"><i class="fas fa-minus"></i></button>
+                                            <input type="number" value="2" min="1">
+                                            <button class="quantity-btn plus"><i class="fas fa-plus"></i></button>
+                                        </div>
+                                    </td>
+                                    <td class="product-total">Rs. 3,700.00</td>
+                                    <td class="product-remove">
+                                        <button class="remove-btn"><i class="fas fa-times"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="product-info">
+                                        <div class="product-image">
+                                            <img src="images/products/paint.jpg" alt="Product">
+                                        </div>
+                                        <div class="product-details">
+                                            <h4><a href="product-detail.html">Premium Interior Paint 5L</a></h4>
+                                            <div class="product-sku">SKU: PAINT-PRE-5L</div>
+                                            <div class="product-color">Color: White</div>
+                                        </div>
+                                    </td>
+                                    <td class="product-price">Rs. 4,200.00</td>
+                                    <td class="product-quantity">
+                                        <div class="quantity-selector">
+                                            <button class="quantity-btn minus"><i class="fas fa-minus"></i></button>
+                                            <input type="number" value="1" min="1">
+                                            <button class="quantity-btn plus"><i class="fas fa-plus"></i></button>
+                                        </div>
+                                    </td>
+                                    <td class="product-total">Rs. 4,200.00</td>
+                                    <td class="product-remove">
+                                        <button class="remove-btn"><i class="fas fa-times"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="cart-actions">
+                        <div class="coupon-code">
+                            <input type="text" placeholder="Coupon code">
+                            <button class="btn">Apply Coupon</button>
+                        </div>
+                        <button class="btn btn-outline">Update Cart</button>
+                    </div>
+                </div>
+                
+                <!-- Cart Summary -->
+                <div class="cart-summary">
+                    <h3>Cart Totals</h3>
+                    <table>
+                        <tr>
+                            <th>Subtotal</th>
+                            <td>Rs. 20,400.00</td>
+                        </tr>
+                        <tr>
+                            <th>Shipping</th>
+                            <td>
+                                <div class="shipping-methods">
+                                    <div class="shipping-option">
+                                        <input type="radio" name="shipping" id="free-shipping" checked>
+                                        <label for="free-shipping">Free Shipping</label>
+                                        <span>Rs. 0.00</span>
+                                    </div>
+                                    <div class="shipping-option">
+                                        <input type="radio" name="shipping" id="express-shipping">
+                                        <label for="express-shipping">Express Shipping</label>
+                                        <span>Rs. 500.00</span>
+                                    </div>
+                                    <div class="shipping-option">
+                                        <input type="radio" name="shipping" id="pickup">
+                                        <label for="pickup">Store Pickup</label>
+                                        <span>Rs. 0.00</span>
+                                    </div>
+                                </div>
+                                <div class="shipping-calculator">
+                                    <a href="#">Calculate shipping</a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Total</th>
+                            <td class="total-price">Rs. 20,400.00</td>
+                        </tr>
+                    </table>
+                    
+                    <button class="btn btn-block proceed-checkout">Proceed to Checkout</button>
+                    
+                    <div class="payment-methods">
+                        <h4>We Accept:</h4>
+                        <div class="payment-icons">
+                            <img src="images/payments/visa.png" alt="Visa">
+                            <img src="images/payments/mastercard.png" alt="Mastercard">
+                            <img src="images/payments/american-express.png" alt="American Express">
+                            <img src="images/payments/paypal.png" alt="PayPal">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter (Same as index.html) -->
+    <!-- Footer (Same as index.html) -->
+
+    <script src="js/main.js"></script>
+    <script src="js/cart.js"></script>
+</body>
+</html>

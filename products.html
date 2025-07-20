@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - Anuradha Hardware</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Top Bar (Same as index.html) -->
+    <!-- Header (Same as index.html) -->
+    <!-- Navigation (Same as index.html) -->
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Our Products</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Products</li>
+                </ol>
+            </nav>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section class="products-page">
+        <div class="container">
+            <div class="products-page-content">
+                <!-- Sidebar Filters -->
+                <aside class="products-sidebar">
+                    <div class="sidebar-widget">
+                        <h3>Categories</h3>
+                        <ul class="category-list">
+                            <li><a href="#" class="active">All Categories</a></li>
+                            <li><a href="#">Tools</a></li>
+                            <li><a href="#">Building Materials</a></li>
+                            <li><a href="#">Paints & Decor</a></li>
+                            <li><a href="#">Plumbing</a></li>
+                            <li><a href="#">Electrical</a></li>
+                            <li><a href="#">Hardware</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="sidebar-widget">
+                        <h3>Price Range</h3>
+                        <div class="price-range">
+                            <input type="range" class="range-slider" min="0" max="50000" value="50000">
+                            <div class="price-values">
+                                <span>Rs. 0</span>
+                                <span>Rs. 50,000</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="sidebar-widget">
+                        <h3>Brands</h3>
+                        <ul class="brand-list">
+                            <li>
+                                <input type="checkbox" id="brand1">
+                                <label for="brand1">Brand One</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="brand2">
+                                <label for="brand2">Brand Two</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="brand3">
+                                <label for="brand3">Brand Three</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="brand4">
+                                <label for="brand4">Brand Four</label>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="sidebar-widget">
+                        <h3>Availability</h3>
+                        <ul class="availability-list">
+                            <li>
+                                <input type="checkbox" id="in-stock" checked>
+                                <label for="in-stock">In Stock</label>
+                            </li>
+                            <li>
+                                <input type="checkbox" id="out-of-stock">
+                                <label for="out-of-stock">Out of Stock</label>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <button class="btn btn-block">Apply Filters</button>
+                    <button class="btn btn-block btn-outline">Reset Filters</button>
+                </aside>
+                
+                <!-- Main Products Listing -->
+                <main class="products-listing">
+                    <div class="listing-header">
+                        <div class="sorting-options">
+                            <span>Sort by:</span>
+                            <select>
+                                <option value="default">Default</option>
+                                <option value="price-low">Price: Low to High</option>
+                                <option value="price-high">Price: High to Low</option>
+                                <option value="popular">Most Popular</option>
+                                <option value="rating">Highest Rating</option>
+                                <option value="newest">Newest</option>
+                            </select>
+                        </div>
+                        <div class="view-options">
+                            <span>View:</span>
+                            <button class="view-btn active" data-view="grid"><i class="fas fa-th"></i></button>
+                            <button class="view-btn" data-view="list"><i class="fas fa-list"></i></button>
+                        </div>
+                    </div>
+                    
+                    <div class="product-grid">
+                        <!-- Product cards (same as index.html but more of them) -->
+                        <!-- Repeat the product card structure from index.html 8-12 times -->
+                    </div>
+                    
+                    <!-- Pagination -->
+                    <div class="pagination">
+                        <a href="#" class="page-nav disabled"><i class="fas fa-chevron-left"></i></a>
+                        <a href="#" class="page-number active">1</a>
+                        <a href="#" class="page-number">2</a>
+                        <a href="#" class="page-number">3</a>
+                        <a href="#" class="page-number">4</a>
+                        <a href="#" class="page-nav"><i class="fas fa-chevron-right"></i></a>
+                    </div>
+                </main>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter (Same as index.html) -->
+    <!-- Footer (Same as index.html) -->
+
+    <script src="js/main.js"></script>
+    <script src="js/products.js"></script>
+</body>
+</html>
