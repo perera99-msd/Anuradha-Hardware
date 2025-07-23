@@ -6,7 +6,7 @@
     </a>
     <hr>
     <ul class="nav nav-pills flex-column mb-auto" id="sidebarMenu">
-        <li><a href="dashboard.php" class="nav-link text-white"><i class="bi bi-speedometer2 me-2"></i> <span class="d-none d-md-inline">Dashboard</span></a></li>
+        <li><a href="index.php" class="nav-link text-white"><i class="bi bi-speedometer2 me-2"></i> <span class="d-none d-md-inline">Dashboard</span></a></li>
         <li><a href="products.php" class="nav-link text-white"><i class="bi bi-box-seam me-2"></i> <span class="d-none d-md-inline">Products</span></a></li>
         <li><a href="categories.php" class="nav-link text-white"><i class="bi bi-tags me-2"></i> <span class="d-none d-md-inline">Categories</span></a></li>
         <li><a href="orders.php" class="nav-link text-white"><i class="bi bi-cart-check me-2"></i> <span class="d-none d-md-inline">Orders</span></a></li>

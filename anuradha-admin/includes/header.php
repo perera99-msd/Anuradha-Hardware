@@ -43,7 +43,7 @@
         </button>
 
         <form class="d-flex ms-auto me-3">
-            <input class="form-control me-2" type="search" placeholder="Search..." aria-label="Search">
+            <!-- <input class="form-control me-2" type="search" placeholder="Search..." aria-label="Search"> -->
         </form>
 
         <div class="text-white">Admin</div>
