@@ -2,6 +2,13 @@
 include('includes/db.php');
 include('includes/header.php');
 
+// --- Fetch categories first ---
+$categories_result = mysqli_query($conn, "SELECT * FROM categories");
+$categories = [];
+while ($row = mysqli_fetch_assoc($categories_result)) {
+    $categories[$row['id']] = $row['name'];
+}
+
 // Handle Add Product
 if (isset($_POST['add_product'])) {
     $name = mysqli_real_escape_string($conn, $_POST['name']);
@@ -10,6 +17,17 @@ if (isset($_POST['add_product'])) {
     $stock = $_POST['stock'];
     $image = '';
 
+    // Validate category
+    if (!array_key_exists($category_id, $categories)) {
+        die("Invalid category selected.");
+    }
+
+    // Validate price/stock
+    if ($price < 0 || $stock < 0) {
+        die("Price and stock must be non-negative.");
+    }
+
+    // Handle image upload
     if (!empty($_FILES['image']['name'])) {
         $image = time() . '_' . $_FILES['image']['name'];
         move_uploaded_file($_FILES['image']['tmp_name'], 'uploads/' . $image);
@@ -17,7 +35,7 @@ if (isset($_POST['add_product'])) {
 
     mysqli_query($conn, "INSERT INTO products (name, category_id, price, stock, image) 
                          VALUES ('$name', '$category_id', '$price', '$stock', '$image')");
-    header("Location: products.php");
+    header("Location: products.php?msg=added");
     exit();
 }
 
@@ -29,6 +47,14 @@ if (isset($_POST['update_product'])) {
     $price = $_POST['price'];
     $stock = $_POST['stock'];
 
+    if (!array_key_exists($category_id, $categories)) {
+        die("Invalid category selected.");
+    }
+
+    if ($price < 0 || $stock < 0) {
+        die("Price and stock must be non-negative.");
+    }
+
     if (!empty($_FILES['image']['name'])) {
         $image = time() . '_' . $_FILES['image']['name'];
         move_uploaded_file($_FILES['image']['tmp_name'], 'uploads/' . $image);
@@ -36,48 +62,38 @@ if (isset($_POST['update_product'])) {
     } else {
         mysqli_query($conn, "UPDATE products SET name='$name', category_id='$category_id', price='$price', stock='$stock' WHERE id=$id");
     }
-    header("Location: products.php");
+    header("Location: products.php?msg=updated");
     exit();
 }
 
 // Handle Delete Product
 if (isset($_GET['delete'])) {
     $id = $_GET['delete'];
+    $getImg = mysqli_fetch_assoc(mysqli_query($conn, "SELECT image FROM products WHERE id=$id"));
+    if ($getImg && $getImg['image'] && file_exists('uploads/' . $getImg['image'])) {
+        unlink('uploads/' . $getImg['image']);
+    }
     mysqli_query($conn, "DELETE FROM products WHERE id=$id");
-    header("Location: products.php");
+    header("Location: products.php?msg=deleted");
     exit();
 }
 
-// Check if categories table exists
-$categories_result = mysqli_query($conn, "SHOW TABLES LIKE 'categories'");
-if (mysqli_num_rows($categories_result) === 0) {
-    echo "<div class='alert alert-danger m-4'>⚠️ The <strong>categories</strong> table does not exist. Please create it first in your database.</div>";
-    include('includes/footer.php');
-    exit();
-}
-
-// Fetch categories for forms
-$categories = mysqli_query($conn, "SELECT * FROM categories");
-
-// Search logic
+// Search
 $search = '';
+$where = '';
 if (isset($_GET['search']) && $_GET['search'] !== '') {
     $search = mysqli_real_escape_string($conn, $_GET['search']);
-    $products = mysqli_query($conn, "
-        SELECT p.*, c.name AS category 
-        FROM products p 
-        LEFT JOIN categories c ON p.category_id = c.id
-        WHERE p.name LIKE '%$search%' OR c.name LIKE '%$search%'
-        ORDER BY p.id DESC
-    ");
-} else {
-    $products = mysqli_query($conn, "
-        SELECT p.*, c.name AS category 
-        FROM products p 
-        LEFT JOIN categories c ON p.category_id = c.id
-        ORDER BY p.id DESC
-    ");
+    $where = "WHERE p.name LIKE '%$search%' OR c.name LIKE '%$search%'";
 }
+
+// Fetch products
+$products = mysqli_query($conn, "
+    SELECT p.*, c.name AS category 
+    FROM products p 
+    LEFT JOIN categories c ON p.category_id = c.id
+    $where
+    ORDER BY p.id DESC
+");
 ?>
 
 <div class="d-flex">
@@ -88,6 +104,11 @@ if (isset($_GET['search']) && $_GET['search'] !== '') {
             <h2 class="mb-0">Products</h2>
             <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal">+ Add Product</button>
         </div>
+
+        <!-- Message Alert -->
+        <?php if (isset($_GET['msg'])): ?>
+            <div class="alert alert-success"><?= ucfirst($_GET['msg']) ?> successfully.</div>
+        <?php endif; ?>
 
         <!-- Search -->
         <form method="get" class="d-flex mb-3" role="search">
@@ -129,8 +150,7 @@ if (isset($_GET['search']) && $_GET['search'] !== '') {
                                 <td>Rs. <?= number_format($row['price'], 2) ?></td>
                                 <td><?= $row['stock'] ?></td>
                                 <td>
-                                    <button
-                                        class="btn btn-sm btn-warning editBtn"
+                                    <button class="btn btn-sm btn-warning editBtn"
                                         data-id="<?= $row['id'] ?>"
                                         data-name="<?= htmlspecialchars($row['name']) ?>"
                                         data-category="<?= $row['category_id'] ?>"
@@ -165,8 +185,8 @@ if (isset($_GET['search']) && $_GET['search'] !== '') {
                 <input type="text" name="name" class="form-control mb-2" placeholder="Product Name" required>
                 <select name="category_id" class="form-control mb-2" required>
                     <option value="">-- Select Category --</option>
-                    <?php foreach ($categories as $cat): ?>
-                        <option value="<?= $cat['id'] ?>"><?= $cat['name'] ?></option>
+                    <?php foreach ($categories as $id => $name): ?>
+                        <option value="<?= $id ?>"><?= $name ?></option>
                     <?php endforeach; ?>
                 </select>
                 <input type="number" step="0.01" name="price" class="form-control mb-2" placeholder="Price" required>
@@ -193,8 +213,8 @@ if (isset($_GET['search']) && $_GET['search'] !== '') {
                 <input type="text" name="name" id="editName" class="form-control mb-2" required>
                 <select name="category_id" id="editCategory" class="form-control mb-2" required>
                     <option value="">-- Select Category --</option>
-                    <?php foreach ($categories as $cat): ?>
-                        <option value="<?= $cat['id'] ?>"><?= $cat['name'] ?></option>
+                    <?php foreach ($categories as $id => $name): ?>
+                        <option value="<?= $id ?>"><?= $name ?></option>
                     <?php endforeach; ?>
                 </select>
                 <input type="number" step="0.01" name="price" id="editPrice" class="form-control mb-2" required>
