@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anuradha Hardware - Your One-Stop Hardware Solution</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="container">
+            <div class="top-bar-content">
+                <div class="contact-info">
+                    <span><i class="fas fa-phone"></i> +94 112 345 678</span>
+                    <span><i class="fas fa-envelope"></i> info@anuradhahardware.com</span>
+                </div>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <a href="index.html">
+                        <img src="images/logo/logo.jpg" alt="Anuradha Hardware">    
+                    </a>
+                </div>
+                <div class="search-bar">
+                    <form action="products.html" method="GET">
+                        <input type="text" placeholder="Search for products...">
+                        <select name="category">
+                            <option value="all">All Categories</option>
+                            <option value="tools">Tools</option>
+                            <option value="building">Building Materials</option>
+                            <option value="paints">Paints</option>
+                            <option value="plumbing">Plumbing</option>
+                            <option value="electrical">Electrical</option>
+                        </select>
+                        <button type="submit"><i class="fas fa-search"></i></button>
+                    </form>
+                </div>
+                <div class="user-actions">
+                    <a href="login.html"><i class="fas fa-user"></i></a>
+                    <a href="wishlist.html"><i class="fas fa-heart"></i></a>
+                    <a href="cart.html" class="cart-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">0</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="container">
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li class="dropdown">
+                    <a href="products.html">Products <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-column">
+                            <h4>Tools</h4>
+                            <a href="products.html?category=hand-tools">Hand Tools</a>
+                            <a href="products.html?category=power-tools">Power Tools</a>
+                            <a href="products.html?category=gardening">Gardening Tools</a>
+                        </div>
+                        <div class="dropdown-column">
+                            <h4>Building Materials</h4>
+                            <a href="products.html?category=cement">Cement & Aggregates</a>
+                            <a href="products.html?category=bricks">Bricks & Blocks</a>
+                            <a href="products.html?category=steel">Steel & Rods</a>
+                        </div>
+                        <div class="dropdown-column">
+                            <h4>Paints & Decor</h4>
+                            <a href="products.html?category=paints">Paints</a>
+                            <a href="products.html?category=wallpaper">Wallpapers</a>
+                            <a href="products.html?category=tiles">Tiles</a>
+                        </div>
+                        <div class="dropdown-column">
+                            <h4>Plumbing</h4>
+                            <a href="products.html?category=pipes">Pipes & Fittings</a>
+                            <a href="products.html?category=bathroom">Bathroom Fixtures</a>
+                            <a href="products.html?category=taps">Taps & Faucets</a>
+                        </div>
+                    </div>
+                </li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="offers.html">Special Offers</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Slider -->
+    <section class="hero-slider">
+        <div class="slider-container">
+            <div class="slide active">
+                <img src="images/slider/1.jpeg" alt="Hardware Products">
+                <div class="slide-content">
+                    <h2>Quality Hardware Solutions</h2>
+                    <p>Everything you need for your construction and home improvement projects</p>
+                    <a href="products.html" class="btn">Shop Now</a>
+                </div>
+            </div>
+            <div class="slide">
+                <img src="images/slider/2.jpeg" alt="Special Offers">
+                <div class="slide-content">
+                    <h2>Seasonal Special Offers</h2>
+                    <p>Up to 30% off on selected items this month</p>
+                    <a href="offers.html" class="btn">View Offers</a>
+                </div>
+            </div>
+            <div class="slide">
+                <img src="images/slider/3.jpeg" alt="Professional Tools">
+                <div class="slide-content">
+                    <h2>Professional Grade Tools</h2>
+                    <p>For contractors and serious DIY enthusiasts</p>
+                    <a href="products.html?category=power-tools" class="btn">Browse Tools</a>
+                </div>
+            </div>
+            <div class="slider-controls">
+                <button class="prev-slide"><i class="fas fa-chevron-left"></i></button>
+                <button class="next-slide"><i class="fas fa-chevron-right"></i></button>
+            </div>
+            <div class="slider-dots"></div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <div class="feature-box">
+                <div class="feature-icon">
+                    <i class="fas fa-truck"></i>
+                </div>
+                <div class="feature-content">
+                    <h3>Free Delivery</h3>
+                    <p>For orders over Rs. 10,000 in Colombo area</p>
+                </div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">
+                    <i class="fas fa-undo"></i>
+                </div>
+                <div class="feature-content">
+                    <h3>Easy Returns</h3>
+                    <p>30-day return policy for most items</p>
+                </div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="feature-content">
+                    <h3>Quality Guarantee</h3>
+                    <p>We stand behind all our products</p>
+                </div>
+            </div>
+            <div class="feature-box">
+                <div class="feature-icon">
+                    <i class="fas fa-headset"></i>
+                </div>
+                <div class="feature-content">
+                    <h3>24/7 Support</h3>
+                    <p>Dedicated customer service</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="categories">
+        <div class="container">
+            <h2 class="section-title">Shop by Category</h2>
+            <div class="category-grid">
+                <a href="products.html?category=tools" class="category-card">
+                    <img src="images/categories/toolls.jpeg" alt="Tools">
+                    <div class="category-overlay">
+                        <h3>Tools</h3>
+                        <p>Shop Now <i class="fas fa-arrow-right"></i></p>
+                    </div>
+                </a>
+                <a href="products.html?category=building" class="category-card">
+                    <img src="images/categories/building.jpeg" alt="Building Materials">
+                    <div class="category-overlay">
+                        <h3>Building Materials</h3>
+                        <p>Shop Now <i class="fas fa-arrow-right"></i></p>
+                    </div>
+                </a>
+                <a href="products.html?category=paints" class="category-card">
+                    <img src="images/categories/paint.jpeg" alt="Paints">
+                    <div class="category-overlay">
+                        <h3>Paints & Decor</h3>
+                        <p>Shop Now <i class="fas fa-arrow-right"></i></p>
+                    </div>
+                </a>
+                <a href="products.html?category=plumbing" class="category-card">
+                    <img src="images/categories/plumb.jpeg" alt="Plumbing">
+                    <div class="category-overlay">
+                        <h3>Plumbing</h3>
+                        <p>Shop Now <i class="fas fa-arrow-right"></i></p>
+                    </div>
+                </a>
+                <a href="products.html?category=electrical" class="category-card">
+                    <img src="images/categories/elec.jpeg" alt="Electrical">
+                    <div class="category-overlay">
+                        <h3>Electrical</h3>
+                        <p>Shop Now <i class="fas fa-arrow-right"></i></p>
+                    </div>
+                </a>
+                <a href="products.html?category=hardware" class="category-card">
+                    <img src="images/categories/hd.jpeg" alt="Hardware">
+                    <div class="category-overlay">
+                        <h3>Hardware</h3>
+                        <p>Shop Now <i class="fas fa-arrow-right"></i></p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Products -->
+    <section class="featured-products">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Featured Products</h2>
+                <a href="products.html" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="product-grid">
+                <!-- Product Card 1 -->
+                <div class="product-card">
+                    <div class="product-badge">New</div>
+                    <div class="product-wishlist"><i class="far fa-heart"></i></div>
+                    <div class="product-thumb">
+                        <a href="product-detail.html"><img src="images/products/The Basic Set of Tools Every Woman Should Own—and….jpeg" alt="Professional Hammer"></a>
+                        <div class="product-actions">
+                            <button class="quick-view"><i class="fas fa-eye"></i></button>
+                            <button class="add-to-cart"><i class="fas fa-shopping-cart"></i></button>
+                        </div>
+                    </div>
+                    <div class="product-details">
+                        <h3><a href="product-detail.html">Professional Hammer 16oz</a></h3>
+                        <div class="product-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                            <span>(24)</span>
+                        </div>
+                        <div class="product-price">
+                            <span class="price">Rs. 1,850.00</span>
+                            <span class="old-price">Rs. 2,200.00</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product Card 2 -->
+                <div class="product-card">
+                    <div class="product-badge">-15%</div>
+                    <div class="product-wishlist"><i class="far fa-heart"></i></div>
+                    <div class="product-thumb">
+                        <a href="product-detail.html"><img src="images/products/SKIL PWR CORE 20 Brushless 20V 1_2 Inch Drill….jpeg" alt="Cordless Drill"></a>
+                        <div class="product-actions">
+                            <button class="quick-view"><i class="fas fa-eye"></i></button>
+                            <button class="add-to-cart"><i class="fas fa-shopping-cart"></i></button>
+                        </div>
+                    </div>
+                    <div class="product-details">
+                        <h3><a href="product-detail.html">18V Cordless Drill Set</a></h3>
+                        <div class="product-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                            <span>(18)</span>
+                        </div>
+                        <div class="product-price">
+                            <span class="price">Rs. 12,500.00</span>
+                            <span class="old-price">Rs. 14,700.00</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product Card 3 -->
+                <div class="product-card">
+                    <div class="product-wishlist"><i class="far fa-heart"></i></div>
+                    <div class="product-thumb">
+                        <a href="product-detail.html"><img src="images/products/THE CHALLENGE_After replacing one of the leading….jpeg" alt="Cement Bag"></a>
+                        <div class="product-actions">
+                            <button class="quick-view"><i class="fas fa-eye"></i></button>
+                            <button class="add-to-cart"><i class="fas fa-shopping-cart"></i></button>
+                        </div>
+                    </div>
+                    <div class="product-details">
+                        <h3><a href="product-detail.html">Portland Cement 50kg</a></h3>
+                        <div class="product-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <span>(32)</span>
+                        </div>
+                        <div class="product-price">
+                            <span class="price">Rs. 1,650.00</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Product Card 4 -->
+                <div class="product-card">
+                    <div class="product-badge">Bestseller</div>
+                    <div class="product-wishlist"><i class="far fa-heart"></i></div>
+                    <div class="product-thumb">
+                        <a href="product-detail.html"><img src="images/products/Two paint bucket mockup Premium Psd _ Premium Psd….jpeg" alt="Interior Paint"></a>
+                        <div class="product-actions">
+                            <button class="quick-view"><i class="fas fa-eye"></i></button>
+                            <button class="add-to-cart"><i class="fas fa-shopping-cart"></i></button>
+                        </div>
+                    </div>
+                    <div class="product-details">
+                        <h3><a href="product-detail.html">Premium Interior Paint 5L</a></h3>
+                        <div class="product-rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                            <span>(29)</span>
+                        </div>
+                        <div class="product-price">
+                            <span class="price">Rs. 4,200.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Banner Section -->
+    <section class="promo-banner">
+        <div class="container">
+            <div class="banner-content">
+                <h2>Professional Contractor Discounts</h2>
+                <p>Register your business and get special pricing on bulk orders</p>
+                <a href="register.html" class="btn btn-outline">Register Now</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials">
+        <div class="container">
+            <h2 class="section-title">What Our Customers Say</h2>
+            <div class="testimonial-slider">
+                <div class="testimonial active">
+                    <div class="testimonial-content">
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p>"Anuradha Hardware has been my go-to supplier for all my construction projects. Their quality is consistently good and their prices are competitive."</p>
+                        <div class="author">
+                            <img src="images/testimonials/1.png" alt="Customer">
+                            <div class="author-info">
+                                <h4>Rajith Perera</h4>
+                                <span>Contractor</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial">
+                    <div class="testimonial-content">
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <p>"Excellent customer service! They helped me find exactly what I needed for my home renovation and even delivered it the same day."</p>
+                        <div class="author">
+                            <img src="images/testimonials/2.png" alt="Customer">
+                            <div class="author-info">
+                                <h4>Nimali Fernando</h4>
+                                <span>Homeowner</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial">
+                    <div class="testimonial-content">
+                        <div class="rating">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <p>"I've been purchasing from Anuradha Hardware for years. Their product range is extensive and their staff is knowledgeable."</p>
+                        <div class="author">
+                            <img src="images/testimonials/3.png" alt="Customer">
+                            <div class="author-info">
+                                <h4>Sanjaya Bandara</h4>
+                                <span>Builder</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-controls">
+                    <button class="prev-testimonial"><i class="fas fa-chevron-left"></i></button>
+                    <button class="next-testimonial"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Brands Section -->
+    <section class="brands">
+        <div class="container">
+            <h2 class="section-title">Our Trusted Brands</h2>
+            <div class="brand-slider">
+                <div class="brand-item">
+                    <img src="images/brands/Bosch Power Tools.jpeg" alt="Brand">
+                </div>
+                <div class="brand-item">
+                    <img src="images/brands/Craftsman Tools Logo Tool Box _ Vinyl Sticker _ bumper, phone, window, xbox, ps4.jpeg" alt="Brand">
+                </div>
+                <div class="brand-item">
+                    <img src="images/brands/Dremel, Schleifmittel, Messingbürste Ø 19,0 mm (2 Stück).jpeg" alt="Brand">
+                </div>
+                <div class="brand-item">
+                    <img src="images/brands/Obtenez vos outils aux meilleurs prix dans le monde entier.jpeg" alt="Brand">
+                </div>
+                <div class="brand-item">
+                    <img src="images/brands/➤ Mejores herramientas hilti 2025 Guía y Opiniones de expertos.jpeg" alt="Brand">
+                </div>
+                <div class="brand-item">
+                    <img src="images/brands/➤ Mejores herramientas stanley 2025 Guía y Opiniones expertas.jpeg" alt="Brand">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter -->
+    <section class="newsletter">
+        <div class="container">
+            <div class="newsletter-content">
+                <div class="newsletter-text">
+                    <h3>Subscribe to Our Newsletter</h3>
+                    <p>Get updates on special offers and new products</p>
+                </div>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Your email address">
+                    <button type="submit">Subscribe</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-logo">
+                        <img src="images/logo/logo.jpg" alt="Anuradha Hardware">
+                        <h3>Anuradha Hardware</h3>
+                    </div>
+                    <p>Your trusted partner for quality hardware and construction materials since 1995.</p>
+                    <div class="footer-social">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="products.html">Products</a></li>
+                        <li><a href="offers.html">Special Offers</a></li>
+                        <li><a href="contact.html">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Customer Service</h4>
+                    <ul>
+                        <li><a href="faq.html">FAQ</a></li>
+                        <li><a href="shipping.html">Shipping Policy</a></li>
+                        <li><a href="returns.html">Return Policy</a></li>
+                        <li><a href="privacy.html">Privacy Policy</a></li>
+                        <li><a href="terms.html">Terms & Conditions</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact Info</h4>
+                    <ul class="contact-info">
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Galle Road, Colombo 04, Sri Lanka</li>
+                        <li><i class="fas fa-phone"></i> +94 112 345 678</li>
+                        <li><i class="fas fa-envelope"></i> info@anuradhahardware.com</li>
+                        <li><i class="fas fa-clock"></i> Mon-Sat: 8:30AM - 6:00PM</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2023 Anuradha Hardware. All Rights Reserved.</p>
+                <div class="payment-methods">
+                    <img src="images/payments/visa, method, card, payment icon.jpeg" alt="Visa">
+                    <img src="images/payments/Brand New_ New Logo and Identity for MasterCard by….jpeg" alt="Mastercard">
+                    <img src="images/payments/American Express Gift Cards Coupons.jpeg" alt="American Express">
+                    <img src="images/payments/c6b792c8-f1d2-4fe2-9474-bb1e8faaa66b.jpeg" alt="PayPal">
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

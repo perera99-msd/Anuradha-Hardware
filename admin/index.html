@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Anuradha Hardware</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="../css/admin.css">
+</head>
+<body>
+    <!-- Admin Wrapper -->
+    <div class="admin-wrapper">
+        <!-- Sidebar -->
+        <div class="admin-sidebar">
+            <div class="admin-logo">
+                <img src="../images/logo-white.png" alt="Anuradha Hardware">
+                <h2>Anuradha Hardware</h2>
+            </div>
+            
+            <ul class="admin-menu">
+                <li class="active">
+                    <a href="index.html">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="products.html">
+                        <i class="fas fa-box-open"></i>
+                        <span>Products</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="categories.html">
+                        <i class="fas fa-list"></i>
+                        <span>Categories</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="orders.html">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span>Orders</span>
+                        <span class="badge">15</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="customers.html">
+                        <i class="fas fa-users"></i>
+                        <span>Customers</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="reviews.html">
+                        <i class="fas fa-star"></i>
+                        <span>Reviews</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="coupons.html">
+                        <i class="fas fa-tag"></i>
+                        <span>Coupons</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="reports.html">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Reports</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="settings.html">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="admin-content">
+            <!-- Admin Header -->
+            <header class="admin-header">
+                <div class="header-left">
+                    <button class="sidebar-toggle">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <div class="header-search">
+                        <input type="text" placeholder="Search...">
+                        <button><i class="fas fa-search"></i></button>
+                    </div>
+                </div>
+                
+                <div class="header-right">
+                    <div class="notifications">
+                        <button class="notification-btn">
+                            <i class="fas fa-bell"></i>
+                            <span class="badge">3</span>
+                        </button>
+                        <div class="notification-dropdown">
+                            <div class="notification-header">
+                                <h4>Notifications</h4>
+                                <a href="#">Mark all as read</a>
+                            </div>
+                            <div class="notification-list">
+                                <a href="#" class="notification-item unread">
+                                    <div class="notification-icon">
+                                        <i class="fas fa-shopping-cart"></i>
+                                    </div>
+                                    <div class="notification-content">
+                                        <p>New order #10025 received</p>
+                                        <span>2 min ago</span>
+                                    </div>
+                                </a>
+                                <a href="#" class="notification-item unread">
+                                    <div class="notification-icon">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <div class="notification-content">
+                                        <p>New customer registered</p>
+                                        <span>1 hour ago</span>
+                                    </div>
+                                </a>
+                                <a href="#" class="notification-item">
+                                    <div class="notification-icon">
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <div class="notification-content">
+                                        <p>New product review received</p>
+                                        <span>3 hours ago</span>
+                                    </div>
+                                </a>
+                                <a href="#" class="notification-item">
+                                    <div class="notification-icon">
+                                        <i class="fas fa-box"></i>
+                                    </div>
+                                    <div class="notification-content">
+                                        <p>Inventory low for Hammer 16oz</p>
+                                        <span>5 hours ago</span>
+                                    </div>
+                                </a>
+                            </div>
+                            <div class="notification-footer">
+                                <a href="#">View all notifications</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="admin-profile">
+                        <div class="profile-dropdown">
+                            <div class="profile-info">
+                                <img src="../images/admin-avatar.jpg" alt="Admin">
+                                <span>Admin User</span>
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                            <div class="profile-menu">
+                                <a href="#"><i class="fas fa-user"></i> Profile</a>
+                                <a href="#"><i class="fas fa-cog"></i> Settings</a>
+                                <a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Dashboard Content -->
+            <main class="dashboard-content">
+                <div class="page-header">
+                    <h1>Dashboard</h1>
+                    <div class="breadcrumb">
+                        <a href="#"><i class="fas fa-home"></i> Home</a>
+                        <span>/</span>
+                        <a href="#">Dashboard</a>
+                    </div>
+                </div>
+                
+                <div class="stats-cards">
+                    <div class="stats-card">
+                        <div class="stats-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="stats-info">
+                            <h3>Today's Orders</h3>
+                            <p>15</p>
+                        </div>
+                        <div class="stats-growth up">
+                            <i class="fas fa-arrow-up"></i> 12%
+                        </div>
+                    </div>
+                    
+                    <div class="stats-card">
+                        <div class="stats-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="stats-info">
+                            <h3>Today's Revenue</h3>
+                            <p>Rs. 125,400.00</p>
+                        </div>
+                        <div class="stats-growth up">
+                            <i class="fas fa-arrow-up"></i> 8%
+                        </div>
+                    </div>
+                    
+                    <div class="stats-card">
+                        <div class="stats-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stats-info">
+                            <h3>Total Customers</h3>
+                            <p>1,245</p>
+                        </div>
+                        <div class="stats-growth up">
+                            <i class="fas fa-arrow-up"></i> 5%
+                        </div>
+                    </div>
+                    
+                    <div class="stats-card">
+                        <div class="stats-icon">
+                            <i class="fas fa-box-open"></i>
+                        </div>
+                        <div class="stats-info">
+                            <h3>Products</h3>
+                            <p>356</p>
+                        </div>
+                        <div class="stats-growth down">
+                            <i class="fas fa-arrow-down"></i> 2%
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-row">
+                    <div class="dashboard-col">
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <h3>Recent Orders</h3>
+                                <a href="orders.html" class="btn btn-sm">View All</a>
+                            </div>
+                            <div class="card-body">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Order ID</th>
+                                            <th>Customer</th>
+                                            <th>Date</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>#10025</td>
+                                            <td>Nimal Perera</td>
+                                            <td>2023-10-15</td>
+                                            <td>Rs. 12,500.00</td>
+                                            <td><span class="badge processing">Processing</span></td>
+                                            <td>
+                                                <a href="#" class="action-btn view"><i class="fas fa-eye"></i></a>
+                                                <a href="#" class="action-btn edit"><i class="fas fa-edit"></i></a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>#10024</td>
+                                            <td>Kamal Silva</td>
+                                            <td>2023-10-14</td>
+                                            <td>Rs. 24,300.00</td>
+                                            <td><span class="badge shipped">Shipped</span></td>
+                                            <td>
+                                                <a href="#" class="action-btn view"><i class="fas fa-eye"></i></a>
+                                                <a href="#" class="action-btn edit"><i class="fas fa-edit"></i></a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>#10023</td>
+                                            <td>Sunil Fernando</td>
+                                            <td>2023-10-14</td>
+                                            <td>Rs. 8,750.00</td>
+                                            <td><span class="badge completed">Completed</span></td>
+                                            <td>
+                                                <a href="#" class="action-btn view"><i class="fas fa-eye"></i></a>
+                                                <a href="#" class="action-btn edit"><i class="fas fa-edit"></i></a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>#10022</td>
+                                            <td>Rajith Bandara</td>
+                                            <td>2023-10-13</td>
+                                            <td>Rs. 15,600.00</td>
+                                            <td><span class="badge pending">Pending</span></td>
+                                            <td>
+                                                <a href="#" class="action-btn view"><i class="fas fa-eye"></i></a>
+                                                <a href="#" class="action-btn edit"><i class="fas fa-edit"></i></a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>#10021</td>
+                                            <td>Anusha Jayasuriya</td>
+                                            <td>2023-10-12</td>
+                                            <td>Rs. 5,400.00</td>
+                                            <td><span class="badge cancelled">Cancelled</span></td>
+                                            <td>
+                                                <a href="#" class="action-btn view"><i class="fas fa-eye"></i></a>
+                                                <a href="#" class="action-btn edit"><i class="fas fa-edit"></i></a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-col">
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <h3>Revenue Overview</h3>
+                                <div class="time-filter">
+                                    <select>
+                                        <option>Last 7 Days</option>
+                                        <option>Last 30 Days</option>
+                                        <option selected>This Month</option>
+                                        <option>Last Month</option>
+                                        <option>This Year</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <canvas id="revenueChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="dashboard-row">
+                    <div class="dashboard-col">
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <h3>Top Selling Products</h3>
+                                <a href="products.html" class="btn btn-sm">View All</a>
+                            </div>
+                            <div class="card-body">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Product</th>
+                                            <th>Price</th>
+                                            <th>Sold</th>
+                                            <th>Revenue</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div class="product-info">
+                                                    <img src="../images/products/drill.jpg" alt="Product">
+                                                    <span>18V Cordless Drill Set</span>
+                                                </div>
+                                            </td>
+                                            <td>Rs. 12,500.00</td>
+                                            <td>45</td>
+                                            <td>Rs. 562,500.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="product-info">
+                                                    <img src="../images/products/paint.jpg" alt="Product">
+                                                    <span>Premium Interior Paint 5L</span>
+                                                </div>
+                                            </td>
+                                            <td>Rs. 4,200.00</td>
+                                            <td>38</td>
+                                            <td>Rs. 159,600.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="product-info">
+                                                    <img src="../images/products/hammer.jpg" alt="Product">
+                                                    <span>Professional Hammer 16oz</span>
+                                                </div>
+                                            </td>
+                                            <td>Rs. 1,850.00</td>
+                                            <td>32</td>
+                                            <td>Rs. 59,200.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="product-info">
+                                                    <img src="../images/products/cement.jpg" alt="Product">
+                                                    <span>Portland Cement 50kg</span>
+                                                </div>
+                                            </td>
+                                            <td>Rs. 1,650.00</td>
+                                            <td>28</td>
+                                            <td>Rs. 46,200.00</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="product-info">
+                                                    <img src="../images/products/saw.jpg" alt="Product">
+                                                    <span>Circular Saw 7-1/4"</span>
+                                                </div>
+                                            </td>
+                                            <td>Rs. 8,750.00</td>
+                                            <td>22</td>
+                                            <td>Rs. 192,500.00</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-col">
+                        <div class="dashboard-card">
+                            <div class="card-header">
+                                <h3>Recent Customers</h3>
+                                <a href="customers.html" class="btn btn-sm">View All</a>
+                            </div>
+                            <div class="card-body">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Customer</th>
+                                            <th>Email</th>
+                                            <th>Phone</th>
+                                            <th>Orders</th>
+                                            <th>Joined</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div class="customer-info">
+                                                    <img src="../images/customers/customer1.jpg" alt="Customer">
+                                                    <span>Nimal Perera</span>
+                                                </div>
+                                            </td>
+                                            <td>nimal@example.com</td>
+                                            <td>0712345678</td>
+                                            <td>3</td>
+                                            <td>2023-09-15</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="customer-info">
+                                                    <img src="../images/customers/customer2.jpg" alt="Customer">
+                                                    <span>Kamal Silva</span>
+                                                </div>
+                                            </td>
+                                            <td>kamal@example.com</td>
+                                            <td>0776543210</td>
+                                            <td>5</td>
+                                            <td>2023-08-22</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="customer-info">
+                                                    <img src="../images/customers/customer3.jpg" alt="Customer">
+                                                    <span>Sunil Fernando</span>
+                                                </div>
+                                            </td>
+                                            <td>sunil@example.com</td>
+                                            <td>0761234567</td>
+                                            <td>2</td>
+                                            <td>2023-10-05</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="customer-info">
+                                                    <img src="../images/customers/customer4.jpg" alt="Customer">
+                                                    <span>Rajith Bandara</span>
+                                                </div>
+                                            </td>
+                                            <td>rajith@example.com</td>
+                                            <td>0759876543</td>
+                                            <td>1</td>
+                                            <td>2023-10-10</td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="customer-info">
+                                                    <img src="../images/customers/customer5.jpg" alt="Customer">
+                                                    <span>Anusha Jayasuriya</span>
+                                                </div>
+                                            </td>
+                                            <td>anusha@example.com</td>
+                                            <td>0723456789</td>
+                                            <td>4</td>
+                                            <td>2023-07-18</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../js/admin.js"></script>
+</body>
+</html>
