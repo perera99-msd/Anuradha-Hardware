@@ -1,8 +1,8 @@
 <?php
 $host = "localhost";
 $user = "root";
-$password = ""; // your DB password
-$database = "anuradha_hardware"; // your DB name
+$password = "";
+$database = "anuradha_hardware";
 
 $conn = new mysqli($host, $user, $password, $database);
 

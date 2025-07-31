@@ -33,17 +33,32 @@ if (!empty($to)) {
     $query .= " AND o.created_at <= '$to'";
 }
 
-// Pagination
+// Pagination logic
 $total = mysqli_num_rows(mysqli_query($conn, $query));
 $totalPages = ceil($total / $limit);
 $query .= " ORDER BY o.created_at DESC LIMIT $limit OFFSET $offset";
 $orders = mysqli_query($conn, $query);
+
+// ✅ Handle status update
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
+    $order_id = $_POST['order_id'];
+    $new_status = $_POST['new_status'];
+    $stmt = mysqli_prepare($conn, "UPDATE orders SET status = ? WHERE id = ?");
+    mysqli_stmt_bind_param($stmt, "si", $new_status, $order_id);
+    mysqli_stmt_execute($stmt);
+    header("Location: orders.php?updated=1");
+    exit;
+}
 ?>
 
 <div class="d-flex">
     <?php include('includes/sidebar.php'); ?>
     <div class="p-4 w-100">
-        <h2 class="mb-3">Orders</h2>
+        <h2 class="mb-3">Delivery</h2>
+
+        <?php if (isset($_GET['updated'])): ?>
+            <div class="alert alert-success">Order status updated successfully.</div>
+        <?php endif; ?>
 
         <!-- Filters -->
         <form method="GET" class="row g-2 align-items-end mb-4">
@@ -86,7 +101,7 @@ $orders = mysqli_query($conn, $query);
                             <th>Status</th>
                             <th>Ordered On</th>
                             <th>Delivery</th>
-                            <th>Action</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -109,10 +124,15 @@ $orders = mysqli_query($conn, $query);
                                     <td><?= htmlspecialchars($row['customer_name']) ?></td>
                                     <td><?= number_format($row['total_amount'], 2) ?></td>
                                     <td><span class="badge bg-<?= $badgeClass ?>"><?= $row['status'] ?></span></td>
-                                    <td><?= date('Y-m-d', $orderedDate) ?></td>
-                                    <td><?= $showDelivery ? date('Y-m-d', $deliveryDate) : "<span class='text-muted'>Not yet</span>" ?></td>
+                                    <td><?= date('Y-m-d', strtotime($row['created_at'])) ?></td>
                                     <td>
+                                        <?= $showDelivery ? date('Y-m-d', $deliveryDate) : "<span class='text-muted'>Not yet</span>" ?>
+                                    </td>
+                                    <td>
+                                        <!-- View -->
                                         <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#viewModal<?= $row['id'] ?>">View</button>
+                                        <!-- Change -->
+                                        <button class="btn btn-sm btn-outline-warning" data-bs-toggle="modal" data-bs-target="#editModal<?= $row['id'] ?>">Change</button>
                                     </td>
                                 </tr>
 
@@ -126,14 +146,46 @@ $orders = mysqli_query($conn, $query);
                                             </div>
                                             <div class="modal-body">
                                                 <p><strong>Status:</strong> <?= $row['status'] ?></p>
-                                                <p><strong>Total:</strong> Rs <?= number_format($row['total_amount'], 2) ?></p>
+                                                <p><strong>Total Amount:</strong> Rs <?= number_format($row['total_amount'], 2) ?></p>
                                                 <p><strong>Customer:</strong> <?= htmlspecialchars($row['customer_name']) ?></p>
-                                                <p><strong>Ordered On:</strong> <?= date('Y-m-d', $orderedDate) ?></p>
-                                                <p><strong>Delivery Day:</strong> <?= date('Y-m-d', $deliveryDate) ?></p>
+                                                <p><strong>Ordered On:</strong> <?= date('Y-m-d', strtotime($row['created_at'])) ?></p>
+                                                <p><strong>Delivery Date:</strong> <?= $showDelivery ? date('Y-m-d', $deliveryDate) : "Not yet available" ?></p>
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Edit Modal -->
+                                <div class="modal fade" id="editModal<?= $row['id'] ?>" tabindex="-1">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content bg-white">
+                                            <form method="POST">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Change Order #<?= $row['id'] ?> Status</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <input type="hidden" name="order_id" value="<?= $row['id'] ?>">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">New Status</label>
+                                                        <select name="new_status" class="form-select" required>
+                                                            <?php
+                                                            foreach ($statuses as $s) {
+                                                                $sel = ($row['status'] === $s) ? 'selected' : '';
+                                                                echo "<option value='$s' $sel>$s</option>";
+                                                            }
+                                                            ?>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="submit" name="update_status" class="btn btn-success">Update</button>
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                </div>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>

@@ -10,8 +10,8 @@
         <li><a href="products.php" class="nav-link text-white"><i class="bi bi-box-seam me-2"></i> <span class="d-none d-md-inline">Products</span></a></li>
         <li><a href="categories.php" class="nav-link text-white"><i class="bi bi-tags me-2"></i> <span class="d-none d-md-inline">Categories</span></a></li>
         <li><a href="orders.php" class="nav-link text-white"><i class="bi bi-cart-check me-2"></i> <span class="d-none d-md-inline">Orders</span></a></li>
+        <li><a href="deliveries.php" class="nav-link text-white"><i class="bi bi-chat-left-dots me-2"></i> <span class="d-none d-md-inline">Deliveries</span></a></li>
         <li><a href="customers.php" class="nav-link text-white"><i class="bi bi-people me-2"></i> <span class="d-none d-md-inline">Customers</span></a></li>
-        <li><a href="reviews.php" class="nav-link text-white"><i class="bi bi-chat-left-dots me-2"></i> <span class="d-none d-md-inline">Reviews</span></a></li>
         <li><a href="reports.php" class="nav-link text-white"><i class="bi bi-graph-up me-2"></i> <span class="d-none d-md-inline">Reports</span></a></li>
         <li><a href="settings.php" class="nav-link text-white"><i class="bi bi-gear me-2"></i> <span class="d-none d-md-inline">Settings</span></a></li>
     </ul>
