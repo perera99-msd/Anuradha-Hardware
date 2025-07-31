@@ -33,6 +33,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_account'])) {
         $update_error = "Please fill in all required fields";
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $update_error = "Please enter a valid email address";
+    } elseif (!preg_match('/^[0-9]{10,15}$/', $phone)) {
+        $update_error = "Please enter a valid phone number";
     } else {
         try {
             // Check if email is already taken by another user
@@ -52,11 +54,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_account'])) {
                     WHERE id = ?");
                 
                 $stmt->execute([
-                    $first_name,
-                    $last_name,
-                    $email,
-                    $phone,
-                    $company,
+                    htmlspecialchars($first_name),
+                    htmlspecialchars($last_name),
+                    htmlspecialchars($email),
+                    htmlspecialchars($phone),
+                    htmlspecialchars($company),
                     $_SESSION['user_id']
                 ]);
                 
@@ -86,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
     $new_password = $_POST['new_password'];
     $confirm_password = $_POST['confirm_password'];
     
-    if (empty($current_password) {
+    if (empty($current_password)) {
         $password_error = "Please enter your current password";
     } elseif (empty($new_password) || empty($confirm_password)) {
         $password_error = "Please enter and confirm your new password";
@@ -125,7 +127,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Account - Anuradha Hardware</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-   <style>
+    <style>
         /* Base Styles */
         :root {
             --primary-color: #3a86ff;
@@ -859,6 +861,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
         .add-address span {
             color: var(--text-secondary);
             font-weight: 600;
+        }
+
+        /* Success and Error Messages */
+        .success-message {
+            color: var(--success-color);
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: rgba(76, 175, 80, 0.1);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .error-message {
+            color: var(--danger-color);
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: rgba(244, 67, 54, 0.1);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         /* Responsive Styles */
