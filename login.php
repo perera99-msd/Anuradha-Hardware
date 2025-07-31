@@ -1,5 +1,39 @@
-<!-- <!DOCTYPE html>
+<?php
+session_start();
+include('db.php');
+
+$error = '';
+
+// Handle login logic
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = $conn->real_escape_string($_POST['email']);
+    $password = $_POST['password']; // raw password (not hashed)
+
+    $sql = "SELECT * FROM users WHERE email = '$email'";
+    $result = $conn->query($sql);
+
+    if ($result && $result->num_rows === 1) {
+        $user = $result->fetch_assoc();
+
+        if (password_verify($password, $user['password'])) {
+            $_SESSION['email'] = $user['email'];
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['first_name'] = $user['first_name'];
+            header("Location: index.html");
+            exit();
+        } else {
+            $error = "Invalid email or password!";
+        }
+    } else {
+        $error = "Invalid email or password!";
+    }
+}
+?>
+
+
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,32 +41,32 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="login.css">
 </head>
+
 <body>
     <!-- Top Bar (Same as index.html) -->
     <!-- Header (Same as index.html) -->
     <!-- Navigation (Same as index.html) -->
 
     <!-- Page Header -->
-    <!-- <section class="page-header">
+    <section class="page-header">
         <div class="container">
             <h1>Login</h1>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="index.html">Home</a></li>
                     <li class="breadcrumb-item"><a href="register.html">Register Now</a></li>
-
                 </ol>
             </nav>
         </div>
     </section>
 
-    Login Section -->
-    <!-- <section class="login-section">
+    <!-- Login Section -->
+    <section class="login-section">
         <div class="container">
             <div class="login-container">
                 <div class="login-form">
                     <h2>Login to Your Account</h2>
-                    <form id="loginForm">
+                    <form method="post" action="">
                         <div class="form-group">
                             <label for="login-email">Email Address *</label>
                             <input type="email" id="login-email" name="email" required>
@@ -45,12 +79,16 @@
                             </div>
                         </div>
                         <div class="form-group checkbox-group">
-                            <input type="checkbox" id="remember-me">
+                            <input type="checkbox" id="remember-me" name="remember">
                             <label for="remember-me">Remember me</label>
                         </div>
                         <button type="submit" class="btn btn-block">Login</button>
 
+                        <?php if (!empty($error)): ?>
+                            <p style="color: red; text-align:center; margin-top:10px;"><?= htmlspecialchars($error) ?></p>
+                        <?php endif; ?>
                     </form>
+
                     <div class="login-divider">
                         <span>or login with</span>
                     </div>
@@ -80,7 +118,8 @@
     <!-- Newsletter (Same as index.html) -->
     <!-- Footer (Same as index.html) -->
 
-    <!-- <script src="js/main.js"></script>
+    <script src="js/main.js"></script>
     <script src="js/login.js"></script>
 </body>
-</html>   --> -->
+
+</html>
