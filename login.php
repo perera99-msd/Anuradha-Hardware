@@ -1,0 +1,1180 @@
+<?php
+require_once 'config/db.php';
+
+session_start();
+
+// Redirect if already logged in
+if (isset($_SESSION['user_id'])) {
+    header("Location: account.php");
+    exit();
+}
+
+$error = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $email = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
+    $password = trim($_POST['password']);
+    $remember = isset($_POST['remember']);
+
+    if (empty($email) || empty($password)) {
+        $error = "Please enter both email and password";
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error = "Please enter a valid email address";
+    } else {
+        try {
+            $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
+            $stmt->execute([$email]);
+            $user = $stmt->fetch();
+
+            if ($user && password_verify($password, $user['password'])) {
+                // Login successful
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['user_email'] = $user['email'];
+                $_SESSION['user_name'] = $user['first_name'] . ' ' . $user['last_name'];
+
+                // Set remember me cookie if checked
+                if ($remember) {
+                    $token = bin2hex(random_bytes(32));
+                    $expiry = time() + 60 * 60 * 24 * 30; // 30 days
+                    
+                    setcookie('remember_token', $token, $expiry, '/', '', true, true);
+                    
+                    // Store token in database
+                    $stmt = $pdo->prepare("UPDATE users SET remember_token = ? WHERE id = ?");
+                    $stmt->execute([$token, $user['id']]);
+                }
+
+                header("Location: account.php");
+                exit();
+            } else {
+                $error = "Invalid email or password";
+            }
+        } catch (PDOException $e) {
+            error_log("Login error: " . $e->getMessage());
+            $error = "Login failed. Please try again.";
+        }
+    }
+}
+?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Anuradha Hardware</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* Base Styles */
+        :root {
+            --primary-color: #3a86ff;
+            --primary-hover: #2667cc;
+            --secondary-color: #8338ec;
+            --accent-color: #ff006e;
+            --dark-bg: #121212;
+            --darker-bg: #0a0a0a;
+            --dark-card: #1e1e1e;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --text-muted: #777777;
+            --border-color: #333333;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+            --info-color: #2196f3;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--text-primary);
+            transition: var(--transition);
+        }
+
+        a:hover {
+            color: var(--primary-color);
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: 600;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: var(--primary-color);
+        }
+
+        /* Top Bar */
+        .top-bar {
+            background-color: var(--darker-bg);
+            padding: 8px 0;
+            font-size: 0.9rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .top-bar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .contact-info {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .contact-info span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--text-secondary);
+        }
+
+        .contact-info i {
+            color: var(--primary-color);
+        }
+
+        .top-bar-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .language-selector, .currency-selector {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .language-selector i, .currency-selector i {
+            color: var(--primary-color);
+        }
+
+        .language-selector select, .currency-selector select {
+            background-color: transparent;
+            border: none;
+            color: var(--text-primary);
+            padding: 5px;
+            cursor: pointer;
+        }
+
+        /* Header */
+        .header {
+            padding: 20px 0;
+            background-color: var(--dark-bg);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo img {
+            height: 40px;
+        }
+
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.5rem;
+        }
+
+        .logo-text span {
+            color: var(--primary-color);
+        }
+
+        .search-bar {
+            flex: 1;
+            min-width: 300px;
+            max-width: 600px;
+        }
+
+        .search-bar form {
+            display: flex;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px 0 0 4px;
+            background-color: var(--darker-bg);
+            color: var(--text-primary);
+        }
+
+        .search-category {
+            border: 1px solid var(--border-color);
+            border-left: none;
+            background-color: var(--darker-bg);
+            color: var(--text-primary);
+            padding: 0 10px;
+            cursor: pointer;
+        }
+
+        .search-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0 15px;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+        }
+
+        .search-btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 20px;
+        }
+
+        .user-action {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            color: var(--text-secondary);
+            position: relative;
+        }
+
+        .user-action i {
+            font-size: 1.3rem;
+        }
+
+        .action-label {
+            font-size: 0.8rem;
+        }
+
+        .cart-count, .wishlist-count {
+            position: absolute;
+            top: -5px;
+            right: 0;
+            background-color: var(--primary-color);
+            color: white;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        /* Navigation */
+        .main-nav {
+            background-color: var(--darker-bg);
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .nav-menu {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-menu > li {
+            position: relative;
+        }
+
+        .nav-menu > li > a {
+            display: block;
+            padding: 15px 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            transition: var(--transition);
+        }
+
+        .nav-menu > li > a:hover, .nav-menu > li > a.active {
+            color: var(--primary-color);
+        }
+
+        .nav-menu > li > a i {
+            font-size: 0.8rem;
+            margin-left: 5px;
+        }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1581578029524-0b8b1b9a0f9c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80') no-repeat center center;
+            background-size: cover;
+            padding: 80px 0;
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .page-header h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+        }
+
+        .breadcrumb {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            color: var(--text-secondary);
+        }
+
+        .breadcrumb a {
+            color: var(--text-secondary);
+        }
+
+        .breadcrumb a:hover {
+            color: var(--primary-color);
+        }
+
+        .breadcrumb span {
+            color: var(--primary-color);
+        }
+
+        /* Login Section */
+        .login-section {
+            padding: 60px 0;
+            display: flex;
+            justify-content: center;
+        }
+
+        .login-container {
+            display: flex;
+            max-width: 1000px;
+            width: 100%;
+            background-color: var(--dark-card);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+
+        .login-form {
+            flex: 1;
+            padding: 40px;
+        }
+
+        .login-form h2 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+
+        .form-description {
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 4px;
+            background-color: var(--darker-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            transition: var(--transition);
+        }
+
+        .form-group input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .remember {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .forgot-password {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+
+        .form-footer {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .social-login {
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .social-login p {
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .social-login p::before,
+        .social-login p::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 30%;
+            height: 1px;
+            background-color: var(--border-color);
+        }
+
+        .social-login p::before {
+            left: 0;
+        }
+
+        .social-login p::after {
+            right: 0;
+        }
+
+        .social-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .social-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 4px;
+            background-color: var(--darker-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .social-btn.google:hover {
+            background-color: #4285F4;
+            border-color: #4285F4;
+        }
+
+        .social-btn.facebook:hover {
+            background-color: #4267B2;
+            border-color: #4267B2;
+        }
+
+        .login-image {
+            flex: 1;
+            background: linear-gradient(rgba(58, 134, 255, 0.2), rgba(58, 134, 255, 0.2)), url('https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80') no-repeat center center;
+            background-size: cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            color: white;
+            text-align: center;
+        }
+
+        .image-content h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+
+        .image-content p {
+            color: var(--text-secondary);
+            max-width: 400px;
+            margin: 0 auto 25px;
+            line-height: 1.7;
+        }
+
+        /* Newsletter Section */
+        .newsletter {
+            padding: 60px 0;
+            background: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('https://images.unsplash.com/photo-1557804506-669a67965ba0?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80') no-repeat center center;
+            background-size: cover;
+            color: white;
+        }
+
+        .newsletter-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .newsletter-text h3 {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+        }
+
+        .newsletter-text p {
+            color: var(--text-secondary);
+        }
+
+        .newsletter-form {
+            display: flex;
+            flex: 1;
+            min-width: 300px;
+            max-width: 500px;
+        }
+
+        .newsletter-form input {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 4px 0 0 4px;
+            background-color: var(--dark-card);
+            color: var(--text-primary);
+        }
+
+        .newsletter-form button {
+            border-radius: 0 4px 4px 0;
+            padding: 0 25px;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--darker-bg);
+            padding: 60px 0 0;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col {
+            padding: 0 15px;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .footer-logo img {
+            height: 40px;
+        }
+
+        .footer-logo h3 {
+            font-size: 1.3rem;
+        }
+
+        .footer-col p {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.7;
+        }
+
+        .footer-social {
+            display: flex;
+            gap: 15px;
+        }
+
+        .footer-social a {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background-color: var(--dark-card);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-secondary);
+            transition: var(--transition);
+        }
+
+        .footer-social a:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .footer-col h4 {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-col h4::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background-color: var(--primary-color);
+        }
+
+        .footer-col ul li {
+            margin-bottom: 12px;
+        }
+
+        .footer-col ul li a {
+            color: var(--text-secondary);
+            transition: var(--transition);
+        }
+
+        .footer-col ul li a:hover {
+            color: var(--primary-color);
+            padding-left: 5px;
+        }
+
+        .contact-info li {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 15px;
+            color: var(--text-secondary);
+        }
+
+        .contact-info i {
+            color: var(--primary-color);
+            margin-top: 3px;
+        }
+
+        .footer-bottom {
+            padding: 20px 0;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .footer-bottom p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .payment-methods {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .payment-methods img {
+            height: 25px;
+            filter: grayscale(100%);
+            opacity: 0.7;
+            transition: var(--transition);
+        }
+
+        .payment-methods img:hover {
+            filter: grayscale(0%);
+            opacity: 1;
+        }
+
+        /* Back to Top */
+        .back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            opacity: 0;
+            pointer-events: none;
+            transition: var(--transition);
+            z-index: 99;
+        }
+
+        .back-to-top.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .back-to-top:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-3px);
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 992px) {
+            .login-container {
+                flex-direction: column;
+            }
+            
+            .login-image {
+                min-height: 300px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .remember-forgot {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .page-header h1 {
+                font-size: 2.2rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .top-bar-content {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .contact-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .header-content {
+                flex-direction: column;
+            }
+            
+            .search-bar {
+                width: 100%;
+            }
+            
+            .social-buttons {
+                flex-direction: column;
+            }
+        }
+
+        /* Error Message */
+        .error-message {
+            color: var(--danger-color);
+            background-color: rgba(244, 67, 54, 0.1);
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="container">
+            <div class="top-bar-content">
+                <div class="contact-info">
+                    <span><i class="fas fa-phone-alt"></i> +94 112 345 678</span>
+                    <span><i class="fas fa-envelope"></i> info@anuradhahardware.com</span>
+                    <span><i class="fas fa-map-marker-alt"></i> 123 Galle Road, Colombo 04</span>
+                </div>
+                <div class="top-bar-actions">
+                    <div class="language-selector">
+                        <i class="fas fa-globe"></i>
+                        <select>
+                            <option value="en">English</option>
+                            <option value="si">සිංහල</option>
+                            <option value="ta">தமிழ்</option>
+                        </select>
+                    </div>
+                    <div class="currency-selector">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <select>
+                            <option value="lkr">LKR</option>
+                            <option value="usd">USD</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <a href="index.php">
+                        <div style="width:40px;height:40px;background:#3a86ff;border-radius:8px;display:flex;align-items:center;justify-content:center;color:white;font-weight:bold">AH</div>
+                        <span class="logo-text">Anuradha <span>Hardware</span></span>
+                    </a>
+                </div>
+                <div class="search-bar">
+                    <form action="products.php" method="GET">
+                        <input type="text" placeholder="Search for products..." class="search-input">
+                        <select name="category" class="search-category">
+                            <option value="all">All Categories</option>
+                            <option value="tools">Tools</option>
+                            <option value="building">Building Materials</option>
+                            <option value="paints">Paints</option>
+                            <option value="plumbing">Plumbing</option>
+                            <option value="electrical">Electrical</option>
+                        </select>
+                        <button type="submit" class="search-btn"><i class="fas fa-search"></i></button>
+                    </form>
+                </div>
+                <div class="user-actions">
+                    <a href="login.php" class="user-action" title="My Account">
+                        <i class="fas fa-user"></i>
+                        <span class="action-label">Account</span>
+                    </a>
+                    <a href="wishlist.php" class="user-action" title="Wishlist">
+                        <i class="fas fa-heart"></i>
+                        <span class="action-label">Wishlist</span>
+                        <span class="wishlist-count">0</span>
+                    </a>
+                    <a href="cart.php" class="user-action cart-icon" title="Cart">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="action-label">Cart</span>
+                        <span class="cart-count">0</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="main-nav">
+        <div class="container">
+            <button class="menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+            <ul class="nav-menu">
+                <li><a href="index.php">Home</a></li>
+                <li><a href="products.php">Products</a></li>
+                <li><a href="about.php">About Us</a></li>
+                <li><a href="services.php">Services</a></li>
+                <li><a href="contact.php">Contact</a></li>
+                <li><a href="offers.php">Special Offers</a></li>
+                <li><a href="blog.php">Blog</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1>Login to Your Account</h1>
+            <div class="breadcrumb">
+                <a href="index.php">Home</a> / <span>Login</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Login Section -->
+    <section class="login-section">
+        <div class="container">
+            <div class="login-container">
+                <div class="login-form">
+                    <h2>Welcome Back</h2>
+                    <p class="form-description">Sign in to access your account, track orders, and manage your profile.</p>
+                    
+                    <?php if (!empty($error)): ?>
+                        <div class="error-message">
+                            <i class="fas fa-exclamation-circle"></i> <?php echo htmlspecialchars($error); ?>
+                        </div>
+                    <?php endif; ?>
+                    
+                    <form method="POST" action="login.php">
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" value="<?php echo isset($email) ? htmlspecialchars($email) : ''; ?>" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" name="password" required>
+                        </div>
+                        
+                        <div class="remember-forgot">
+                            <div class="remember">
+                                <input type="checkbox" id="remember" name="remember">
+                                <label for="remember">Remember me</label>
+                            </div>
+                            <a href="forgot-password.php" class="forgot-password">Forgot Password?</a>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary" style="width:100%;padding:15px">Sign In</button>
+                        
+                        <div class="form-footer">
+                            <p>Don't have an account? <a href="register.php" style="color:var(--primary-color);font-weight:600">Register Now</a></p>
+                        </div>
+                    </form>
+                    
+                    <div class="social-login">
+                        <p>Or sign in with</p>
+                        <div class="social-buttons">
+                            <div class="social-btn google">
+                                <i class="fab fa-google"></i>
+                                <span>Google</span>
+                            </div>
+                            <div class="social-btn facebook">
+                                <i class="fab fa-facebook-f"></i>
+                                <span>Facebook</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="login-image">
+                    <div class="image-content">
+                        <h3>Why Create an Account?</h3>
+                        <p>Access exclusive features and benefits when you register with Anuradha Hardware.</p>
+                        <div style="text-align:left;max-width:400px;margin:0 auto;">
+                            <ul style="margin-top:20px;">
+                                <li style="margin-bottom:15px;display:flex;align-items:flex-start;gap:10px;">
+                                    <i class="fas fa-percent" style="color:var(--primary-color);margin-top:3px;"></i>
+                                    <span>Access to special pricing and discounts</span>
+                                </li>
+                                <li style="margin-bottom:15px;display:flex;align-items:flex-start;gap:10px;">
+                                    <i class="fas fa-shipping-fast" style="color:var(--primary-color);margin-top:3px;"></i>
+                                    <span>Faster checkout process</span>
+                                </li>
+                                <li style="margin-bottom:15px;display:flex;align-items:flex-start;gap:10px;">
+                                    <i class="fas fa-history" style="color:var(--primary-color);margin-top:3px;"></i>
+                                    <span>View your order history</span>
+                                </li>
+                                <li style="margin-bottom:15px;display:flex;align-items:flex-start;gap:10px;">
+                                    <i class="fas fa-heart" style="color:var(--primary-color);margin-top:3px;"></i>
+                                    <span>Save items to your wishlist</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="newsletter">
+        <div class="container">
+            <div class="newsletter-content">
+                <div class="newsletter-text">
+                    <h3>Subscribe to Our Newsletter</h3>
+                    <p>Get updates on special offers and new products</p>
+                </div>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Your email address" required>
+                    <button type="submit" class="btn btn-primary">Subscribe</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="footer-logo">
+                        <div style="width:40px;height:40px;background:#3a86ff;border-radius:8px;display:flex;align-items:center;justify-content:center;color:white;font-weight:bold">AH</div>
+                        <h3>Anuradha Hardware</h3>
+                    </div>
+                    <p>Your trusted partner for quality hardware and construction materials since 1995.</p>
+                    <div class="footer-social">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.php">Home</a></li>
+                        <li><a href="about.php">About Us</a></li>
+                        <li><a href="products.php">Products</a></li>
+                        <li><a href="services.php">Services</a></li>
+                        <li><a href="offers.php">Special Offers</a></li>
+                        <li><a href="contact.php">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Customer Service</h4>
+                    <ul>
+                        <li><a href="faq.php">FAQ</a></li>
+                        <li><a href="shipping.php">Shipping Policy</a></li>
+                        <li><a href="returns.php">Return Policy</a></li>
+                        <li><a href="privacy.php">Privacy Policy</a></li>
+                        <li><a href="terms.php">Terms & Conditions</a></li>
+                        <li><a href="size-guide.php">Size Guide</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Contact Info</h4>
+                    <ul class="contact-info">
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Galle Road, Colombo 04, Sri Lanka</li>
+                        <li><i class="fas fa-phone"></i> +94 112 345 678</li>
+                        <li><i class="fas fa-envelope"></i> info@anuradhahardware.com</li>
+                        <li><i class="fas fa-clock"></i> Mon-Sat: 8:30AM - 6:00PM</li>
+                        <li><i class="fas fa-store"></i> Sun: 10:00AM - 4:00PM</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; <?php echo date('Y'); ?> Anuradha Hardware. All Rights Reserved.</p>
+                <div class="payment-methods">
+                    <div style="background:#eee;padding:2px 8px;border-radius:4px;font-weight:bold">VISA</div>
+                    <div style="background:#eee;padding:2px 8px;border-radius:4px;font-weight:bold">MASTERCARD</div>
+                    <div style="background:#eee;padding:2px 8px;border-radius:4px;font-weight:bold">AMEX</div>
+                    <div style="background:#eee;padding:2px 8px;border-radius:4px;font-weight:bold">COD</div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <a href="#" class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Form submission
+            const loginForm = document.querySelector('form');
+            
+            loginForm.addEventListener('submit', function(e) {
+                const submitBtn = this.querySelector('button[type="submit"]');
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing In...';
+                submitBtn.disabled = true;
+            });
+            
+            // Mobile menu toggle
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navMenu = document.querySelector('.nav-menu');
+            if (menuToggle) {
+                menuToggle.addEventListener('click', () => {
+                    navMenu.classList.toggle('active');
+                    menuToggle.innerHTML = navMenu.classList.contains('active') ? 
+                        '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+                });
+            }
+            
+            // Back to top button
+            const backToTop = document.getElementById('backToTop');
+            window.addEventListener('scroll', () => {
+                if (window.pageYOffset > 300) {
+                    backToTop.classList.add('active');
+                } else {
+                    backToTop.classList.remove('active');
+                }
+            });
+            
+            backToTop.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+            
+            // Social login buttons
+            document.querySelectorAll('.social-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const platform = this.classList.contains('google') ? 'Google' : 'Facebook';
+                    alert(`You selected ${platform} login. In a real application, this would redirect to ${platform} authentication.`);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

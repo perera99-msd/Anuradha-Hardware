@@ -1,11 +1,96 @@
+<?php
+require_once 'config/db.php';
+
+$error = '';
+$success = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Validate and sanitize input
+    $firstName = sanitizeInput($_POST['firstName']);
+    $lastName = sanitizeInput($_POST['lastName']);
+    $email = filter_var(trim($_POST['email']), FILTER_SANITIZE_EMAIL);
+    $password = trim($_POST['password']);
+    $confirmPassword = trim($_POST['confirmPassword']);
+    $phone = sanitizeInput($_POST['phone']);
+    $accountType = $_POST['accountType'];
+    $businessName = isset($_POST['businessName']) ? sanitizeInput($_POST['businessName']) : null;
+    $vatNumber = isset($_POST['vatNumber']) ? sanitizeInput($_POST['vatNumber']) : null;
+    $address = sanitizeInput($_POST['address']);
+    $city = sanitizeInput($_POST['city']);
+    $postalCode = sanitizeInput($_POST['postalCode']);
+    $country = sanitizeInput($_POST['country']);
+
+    // Validate required fields
+    if (empty($firstName) || empty($lastName) || empty($email) || empty($password) || 
+        empty($confirmPassword) || empty($phone) || empty($address) || 
+        empty($city) || empty($postalCode) || empty($country)) {
+        $error = "All required fields must be filled!";
+    }
+    // Validate email
+    elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error = "Invalid email format!";
+    }
+    // Validate password match
+    elseif ($password !== $confirmPassword) {
+        $error = "Passwords do not match!";
+    }
+    // Validate password strength
+    elseif (strlen($password) < 8) {
+        $error = "Password must be at least 8 characters long!";
+    }
+    // Validate terms checkbox
+    elseif (!isset($_POST['terms'])) {
+        $error = "You must agree to the Terms & Conditions!";
+    } else {
+        try {
+            // Check if email already exists
+            $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
+            $stmt->execute([$email]);
+            
+            if ($stmt->rowCount() > 0) {
+                $error = "Email already exists!";
+            } else {
+                // Hash the password
+                $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+                
+                // Insert into database
+                $stmt = $pdo->prepare("INSERT INTO users (first_name, last_name, email, password, phone, account_type, business_name, vat_number, address, city, postal_code, country) 
+                                       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                $stmt->execute([
+                    $firstName, 
+                    $lastName, 
+                    $email, 
+                    $hashedPassword, 
+                    $phone, 
+                    $accountType, 
+                    $businessName, 
+                    $vatNumber, 
+                    $address, 
+                    $city, 
+                    $postalCode, 
+                    $country
+                ]);
+
+                // Redirect to success page
+                header("Location: registration-success.php");
+                exit();
+            }
+        } catch (PDOException $e) {
+            $error = "Registration failed. Please try again.";
+            // Log the error for admin
+            error_log("Registration error: " . $e->getMessage());
+        }
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Anuradha Hardware</title>
+    <title>Register - Anuradha Hardware</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
+   <style>
         /* Base Styles */
         :root {
             --primary-color: #3a86ff;
@@ -121,6 +206,15 @@
             background-color: var(--primary-color);
         }
 
+        .view-all {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .view-all:hover {
+            text-decoration: underline;
+        }
+
         /* Top Bar */
         .top-bar {
             background-color: var(--darker-bg);
@@ -174,6 +268,10 @@
             color: var(--text-primary);
             padding: 5px;
             cursor: pointer;
+        }
+
+        .language-selector select option, .currency-selector select option {
+            background-color: var(--dark-card);
         }
 
         /* Header */
@@ -325,7 +423,7 @@
 
         /* Page Header */
         .page-header {
-            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1581578029524-0b8b1b9a0f9c?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80') no-repeat center center;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1560439514-4e9645039924?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80') no-repeat center center;
             background-size: cover;
             padding: 80px 0;
             text-align: center;
@@ -356,14 +454,14 @@
             color: var(--primary-color);
         }
 
-        /* Login Section */
-        .login-section {
+        /* Registration Section */
+        .registration-section {
             padding: 60px 0;
             display: flex;
             justify-content: center;
         }
 
-        .login-container {
+        .registration-container {
             display: flex;
             max-width: 1000px;
             width: 100%;
@@ -373,12 +471,12 @@
             box-shadow: var(--shadow);
         }
 
-        .login-form {
+        .registration-form {
             flex: 1;
             padding: 40px;
         }
 
-        .login-form h2 {
+        .registration-form h2 {
             font-size: 2rem;
             margin-bottom: 10px;
             color: var(--primary-color);
@@ -393,13 +491,25 @@
             margin-bottom: 20px;
         }
 
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-col {
+            flex: 1;
+        }
+
         .form-group label {
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
         }
 
-        .form-group input {
+        .form-group input, 
+        .form-group select, 
+        .form-group textarea {
             width: 100%;
             padding: 12px 15px;
             border-radius: 4px;
@@ -409,30 +519,62 @@
             transition: var(--transition);
         }
 
-        .form-group input:focus {
+        .form-group input:focus, 
+        .form-group select:focus, 
+        .form-group textarea:focus {
             border-color: var(--primary-color);
             outline: none;
         }
 
-        .remember-forgot {
+        .account-type {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            gap: 20px;
             margin-bottom: 20px;
         }
 
-        .remember {
+        .account-type label {
             display: flex;
             align-items: center;
             gap: 8px;
+            cursor: pointer;
+            padding: 12px 20px;
+            background-color: var(--darker-bg);
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+            flex: 1;
         }
 
-        .forgot-password {
+        .account-type label:hover {
+            border-color: var(--primary-color);
+        }
+
+        .account-type input[type="radio"] {
+            display: none;
+        }
+
+        .account-type input[type="radio"]:checked + label {
+            background-color: rgba(58, 134, 255, 0.1);
+            border-color: var(--primary-color);
+        }
+
+        .terms {
+            display: flex;
+            gap: 10px;
+            margin: 25px 0;
+        }
+
+        .terms input {
+            margin-top: 3px;
+        }
+
+        .terms label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .terms a {
             color: var(--primary-color);
-            font-weight: 600;
-        }
-
-        .forgot-password:hover {
             text-decoration: underline;
         }
 
@@ -499,28 +641,34 @@
             border-color: #4267B2;
         }
 
-        .login-image {
+        .registration-image {
             flex: 1;
-            background: linear-gradient(rgba(58, 134, 255, 0.2), rgba(58, 134, 255, 0.2)), url('https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80') no-repeat center center;
+            background: linear-gradient(rgba(58, 134, 255, 0.2), rgba(58, 134, 255, 0.2)), url('https://images.unsplash.com/photo-1601924994987-69e26d50dc26?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80') no-repeat center center;
             background-size: cover;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            align-items: flex-end;
             padding: 40px;
             color: white;
-            text-align: center;
         }
 
         .image-content h3 {
             font-size: 1.8rem;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
-        .image-content p {
-            color: var(--text-secondary);
-            max-width: 400px;
-            margin: 0 auto 25px;
-            line-height: 1.7;
+        .image-content ul {
+            margin-left: 20px;
+        }
+
+        .image-content li {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .image-content li i {
+            color: var(--primary-color);
         }
 
         /* Newsletter Section */
@@ -739,20 +887,23 @@
 
         /* Responsive Styles */
         @media (max-width: 992px) {
-            .login-container {
+            .registration-container {
                 flex-direction: column;
             }
             
-            .login-image {
+            .registration-image {
                 min-height: 300px;
             }
         }
 
         @media (max-width: 768px) {
-            .remember-forgot {
+            .form-row {
                 flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
+                gap: 0;
+            }
+            
+            .account-type {
+                flex-direction: column;
             }
             
             .page-header h1 {
@@ -777,10 +928,6 @@
             
             .search-bar {
                 width: 100%;
-            }
-            
-            .social-buttons {
-                flex-direction: column;
             }
         }
     </style>
@@ -881,49 +1028,145 @@
     <!-- Page Header -->
     <section class="page-header">
         <div class="container">
-            <h1>Login to Your Account</h1>
+            <h1>Create Your Account</h1>
             <div class="breadcrumb">
-                <a href="index.html">Home</a> / <span>Login</span>
+                <a href="index.html">Home</a> / <span>Register</span>
             </div>
         </div>
     </section>
 
-    <!-- Login Section -->
-    <section class="login-section">
+    <!-- Registration Section -->
+    <section class="registration-section">
         <div class="container">
-            <div class="login-container">
-                <div class="login-form">
-                    <h2>Welcome Back</h2>
-                    <p class="form-description">Sign in to access your account, track orders, and manage your profile.</p>
+            <div class="registration-container">
+                <div class="registration-form">
+                    <h2>Register Account</h2>
+                    <p class="form-description">Create your account to access special pricing, track orders, and manage your profile.</p>
                     
-                    <form id="loginForm">
+                    <?php if (!empty($error)): ?>
+                        <div class="error-message">
+                            <i class="fas fa-exclamation-circle"></i> <?php echo $error; ?>
+                        </div>
+                    <?php endif; ?>
+                    
+                    <form id="registrationForm" method="POST" action="register.php">
+                        <div class="form-row">
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="firstName">First Name</label>
+                                    <input type="text" id="firstName" name="firstName" value="<?php echo isset($firstName) ? htmlspecialchars($firstName) : ''; ?>" required>
+                                </div>
+                            </div>
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="lastName">Last Name</label>
+                                    <input type="text" id="lastName" name="lastName" value="<?php echo isset($lastName) ? htmlspecialchars($lastName) : ''; ?>" required>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <div class="form-group">
                             <label for="email">Email Address</label>
-                            <input type="email" id="email" name="email" required>
+                            <input type="email" id="email" name="email" value="<?php echo isset($email) ? htmlspecialchars($email) : ''; ?>" required>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="password">Password</label>
+                                    <input type="password" id="password" name="password" required>
+                                    <div class="password-hint">Minimum 8 characters</div>
+                                    <div class="password-strength">
+                                        <div class="strength-meter" id="strengthMeter"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="confirmPassword">Confirm Password</label>
+                                    <input type="password" id="confirmPassword" name="confirmPassword" required>
+                                </div>
+                            </div>
                         </div>
                         
                         <div class="form-group">
-                            <label for="password">Password</label>
-                            <input type="password" id="password" name="password" required>
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" value="<?php echo isset($phone) ? htmlspecialchars($phone) : ''; ?>" required>
                         </div>
                         
-                        <div class="remember-forgot">
-                            <div class="remember">
-                                <input type="checkbox" id="remember">
-                                <label for="remember">Remember me</label>
+                        <div class="form-group">
+                            <label>Account Type</label>
+                            <div class="account-type">
+                                <input type="radio" id="individual" name="accountType" value="individual" <?php echo (!isset($accountType) || $accountType === 'individual') ? 'checked' : ''; ?>>
+                                <label for="individual"><i class="fas fa-user"></i> Individual Account</label>
+                                
+                                <input type="radio" id="business" name="accountType" value="business" <?php echo (isset($accountType) && $accountType === 'business') ? 'checked' : ''; ?>>
+                                <label for="business"><i class="fas fa-building"></i> Business Account</label>
                             </div>
-                            <a href="forgot-password.html" class="forgot-password">Forgot Password?</a>
                         </div>
                         
-                        <button type="submit" class="btn btn-primary" style="width:100%;padding:15px">Sign In</button>
+                        <div id="businessFields" style="display: <?php echo (isset($accountType) && $accountType === 'business' ? 'block' : 'none'); ?>;">
+                            <div class="form-row">
+                                <div class="form-col">
+                                    <div class="form-group">
+                                        <label for="businessName">Business Name</label>
+                                        <input type="text" id="businessName" name="businessName" value="<?php echo isset($businessName) ? htmlspecialchars($businessName) : ''; ?>">
+                                    </div>
+                                </div>
+                                <div class="form-col">
+                                    <div class="form-group">
+                                        <label for="vatNumber">VAT Number</label>
+                                        <input type="text" id="vatNumber" name="vatNumber" value="<?php echo isset($vatNumber) ? htmlspecialchars($vatNumber) : ''; ?>">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="address">Address</label>
+                            <textarea id="address" name="address" rows="3" required><?php echo isset($address) ? htmlspecialchars($address) : ''; ?></textarea>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="city">City</label>
+                                    <input type="text" id="city" name="city" value="<?php echo isset($city) ? htmlspecialchars($city) : ''; ?>" required>
+                                </div>
+                            </div>
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="postalCode">Postal Code</label>
+                                    <input type="text" id="postalCode" name="postalCode" value="<?php echo isset($postalCode) ? htmlspecialchars($postalCode) : ''; ?>" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="country">Country</label>
+                            <select id="country" name="country" required>
+                                <option value="Sri Lanka" <?php echo (isset($country) && $country === 'Sri Lanka' ? 'selected' : ''); ?>>Sri Lanka</option>
+                                <option value="India" <?php echo (isset($country) && $country === 'India' ? 'selected' : ''); ?>>India</option>
+                                <option value="United States" <?php echo (isset($country) && $country === 'United States' ? 'selected' : ''); ?>>United States</option>
+                                <option value="United Kingdom" <?php echo (isset($country) && $country === 'United Kingdom' ? 'selected' : ''); ?>>United Kingdom</option>
+                                <option value="Australia" <?php echo (isset($country) && $country === 'Australia' ? 'selected' : ''); ?>>Australia</option>
+                            </select>
+                        </div>
+                        
+                        <div class="terms">
+                            <input type="checkbox" id="terms" name="terms" required <?php echo isset($_POST['terms']) ? 'checked' : ''; ?>>
+                            <label for="terms">I agree to the <a href="terms.html">Terms & Conditions</a> and <a href="privacy.html">Privacy Policy</a></label>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-primary" style="width:100%;padding:15px">Create Account</button>
                         
                         <div class="form-footer">
-                            <p>Don't have an account? <a href="register.html" style="color:var(--primary-color);font-weight:600">Register Now</a></p>
+                            <p>Already have an account? <a href="login.html" style="color:var(--primary-color);font-weight:600">Sign In</a></p>
                         </div>
                     </form>
                     
                     <div class="social-login">
-                        <p>Or sign in with</p>
+                        <p>Or register with</p>
                         <div class="social-buttons">
                             <div class="social-btn google">
                                 <i class="fab fa-google"></i>
@@ -937,30 +1180,17 @@
                     </div>
                 </div>
                 
-                <div class="login-image">
+                <div class="registration-image">
                     <div class="image-content">
-                        <h3>Why Create an Account?</h3>
-                        <p>Access exclusive features and benefits when you register with Anuradha Hardware.</p>
-                        <div style="text-align:left;max-width:400px;margin:0 auto;">
-                            <ul style="margin-top:20px;">
-                                <li style="margin-bottom:15px;display:flex;align-items:flex-start;gap:10px;">
-                                    <i class="fas fa-percent" style="color:var(--primary-color);margin-top:3px;"></i>
-                                    <span>Access to special pricing and discounts</span>
-                                </li>
-                                <li style="margin-bottom:15px;display:flex;align-items:flex-start;gap:10px;">
-                                    <i class="fas fa-shipping-fast" style="color:var(--primary-color);margin-top:3px;"></i>
-                                    <span>Faster checkout process</span>
-                                </li>
-                                <li style="margin-bottom:15px;display:flex;align-items:flex-start;gap:10px;">
-                                    <i class="fas fa-history" style="color:var(--primary-color);margin-top:3px;"></i>
-                                    <span>View your order history</span>
-                                </li>
-                                <li style="margin-bottom:15px;display:flex;align-items:flex-start;gap:10px;">
-                                    <i class="fas fa-heart" style="color:var(--primary-color);margin-top:3px;"></i>
-                                    <span>Save items to your wishlist</span>
-                                </li>
-                            </ul>
-                        </div>
+                        <h3>Benefits of Registration</h3>
+                        <ul>
+                            <li><i class="fas fa-check-circle"></i> Access to contractor discounts</li>
+                            <li><i class="fas fa-check-circle"></i> Save up to 15% on bulk orders</li>
+                            <li><i class="fas fa-check-circle"></i> Faster checkout process</li>
+                            <li><i class="fas fa-check-circle"></i> Track order history</li>
+                            <li><i class="fas fa-check-circle"></i> Manage multiple delivery addresses</li>
+                            <li><i class="fas fa-check-circle"></i> Exclusive promotions and offers</li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -1053,32 +1283,84 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Form submission
-            const loginForm = document.getElementById('loginForm');
+            // Toggle business fields
+            const accountTypeRadios = document.querySelectorAll('input[name="accountType"]');
+            const businessFields = document.getElementById('businessFields');
             
-            loginForm.addEventListener('submit', function(e) {
-                e.preventDefault();
+            accountTypeRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.value === 'business') {
+                        businessFields.style.display = 'block';
+                    } else {
+                        businessFields.style.display = 'none';
+                    }
+                });
+            });
+            
+            // Password strength indicator
+            const passwordInput = document.getElementById('password');
+            const strengthMeter = document.getElementById('strengthMeter');
+            
+            passwordInput.addEventListener('input', function() {
+                const password = this.value;
+                let strength = 0;
                 
-                // Get form values
-                const email = document.getElementById('email').value;
+                // Length check
+                if (password.length >= 8) strength += 1;
+                if (password.length >= 12) strength += 1;
+                
+                // Character variety
+                if (/[A-Z]/.test(password)) strength += 1;
+                if (/[0-9]/.test(password)) strength += 1;
+                if (/[^A-Za-z0-9]/.test(password)) strength += 1;
+                
+                // Update meter
+                let width = 0;
+                let color = '';
+                
+                if (strength <= 1) {
+                    width = 25;
+                    color = '#f44336'; // Red
+                } else if (strength <= 3) {
+                    width = 50;
+                    color = '#ff9800'; // Orange
+                } else if (strength <= 4) {
+                    width = 75;
+                    color = '#4caf50'; // Green
+                } else {
+                    width = 100;
+                    color = '#3a86ff'; // Blue
+                }
+                
+                strengthMeter.style.width = width + '%';
+                strengthMeter.style.background = color;
+            });
+            
+            // Form validation
+            const registrationForm = document.getElementById('registrationForm');
+            
+            registrationForm.addEventListener('submit', function(e) {
                 const password = document.getElementById('password').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+                const termsChecked = document.getElementById('terms').checked;
                 
-                // Basic validation
-                if (!email || !password) {
-                    alert('Please fill in all required fields');
+                if (password !== confirmPassword) {
+                    e.preventDefault();
+                    alert('Passwords do not match!');
                     return;
                 }
                 
-                // In a real application, you would send the form data to the server here
-                // For demo purposes, we'll simulate a successful login
-                const loginBtn = this.querySelector('button[type="submit"]');
-                loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing In...';
-                loginBtn.disabled = true;
+                if (password.length < 8) {
+                    e.preventDefault();
+                    alert('Password must be at least 8 characters long!');
+                    return;
+                }
                 
-                setTimeout(() => {
-                    alert('Login successful! Redirecting to your account...');
-                    window.location.href = 'account.html';
-                }, 1500);
+                if (!termsChecked) {
+                    e.preventDefault();
+                    alert('You must agree to the Terms & Conditions!');
+                    return;
+                }
             });
             
             // Mobile menu toggle
