@@ -1,0 +1,18 @@
+.card {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.card-header {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.card-body {
+  padding: 1rem;
+}
+
+canvas {
+  width: 100% !important;
+  height: auto !important;
+}
