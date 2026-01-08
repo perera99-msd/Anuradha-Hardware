@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 4.9.0.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Generation Time: Sep 20, 2025 at 05:29 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Host: sql100.infinityfree.com
+-- Generation Time: Jan 08, 2026 at 05:58 AM
+-- Server version: 10.6.22-MariaDB
+-- PHP Version: 7.2.22
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -18,8 +19,28 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `anuradha_hardware`
+-- Database: `if0_40855726_adnuradhahahardware`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `admins`
+--
+
+CREATE TABLE `admins` (
+  `id` int(11) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `admins`
+--
+
+INSERT INTO `admins` (`id`, `username`, `password`, `created_at`) VALUES
+(1, 'admin', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', '2025-09-21 10:00:00');
 
 -- --------------------------------------------------------
 
@@ -51,13 +72,6 @@ CREATE TABLE `cart_items` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `cart_items`
---
-
-INSERT INTO `cart_items` (`id`, `user_id`, `session_id`, `product_id`, `quantity`, `created_at`, `updated_at`) VALUES
-(14, 6, NULL, 39, 1, '2025-08-28 08:19:56', '2025-08-28 08:19:56');
 
 -- --------------------------------------------------------
 
@@ -100,27 +114,6 @@ CREATE TABLE `customers` (
   `address` text DEFAULT NULL,
   `created_at` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `customers`
---
-
-INSERT INTO `customers` (`id`, `name`, `email`, `phone`, `address`, `created_at`) VALUES
-(1, 'Anura Perera', 'anura@mail.com', '0771234567', 'Colombo', '2025-07-23 17:28:03'),
-(2, 'Saman Silva', 'saman@mail.com', '0772345678', 'Kandy', '2025-07-23 17:28:03'),
-(3, 'Nimal Fernando', 'nimal@mail.com', '0773456789', 'Galle', '2025-07-23 17:28:03'),
-(4, 'Sunil Rajapakse', 'sunil@mail.com', '0774567890', 'Kurunegala', '2025-07-23 17:28:03'),
-(5, 'Kamal Gunasekara', 'kamal@mail.com', '0775678901', 'Negombo', '2025-07-23 17:28:03'),
-(6, 'Nirosha De Silva', 'nirosha@mail.com', '0776789012', 'Matara', '2025-07-23 17:28:03'),
-(7, 'Dilani Jayasinghe', 'dilani@mail.com', '0777890123', 'Anuradhapura', '2025-07-23 17:28:03'),
-(8, 'Tharindu Mendis', 'tharindu@mail.com', '0778901234', 'Rathnapura', '2025-07-23 17:28:03'),
-(9, 'Sanduni Herath', 'sanduni@mail.com', '0779012345', 'Nuwara Eliya', '2025-07-23 17:28:03'),
-(10, 'Hasitha Karunaratne', 'hasitha@mail.com', '0770123456', 'Polonnaruwa', '2025-07-23 17:28:03'),
-(11, 'Chamara Wickramasinghe', 'chamara@mail.com', '0771111111', 'Badulla', '2025-07-23 17:28:03'),
-(12, 'Ruwan Pathirana', 'ruwan@mail.com', '0772222222', 'Hambantota', '2025-07-23 17:28:03'),
-(13, 'Madhavi Seneviratne', 'madhavi@mail.com', '0773333333', 'Trincomalee', '2025-07-23 17:28:03'),
-(14, 'Kasun Jayalath', 'kasun@mail.com', '0774444444', 'Ampara', '2025-07-23 17:28:03'),
-(15, 'Isuru Bandara', 'isuru@mail.com', '0775555555', 'Jaffna', '2025-07-23 17:28:03');
 
 -- --------------------------------------------------------
 
@@ -171,23 +164,7 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`id`, `customer_id`, `total_amount`, `status`, `created_at`) VALUES
-(1, 1, 1500.00, 'Completed', '2025-01-15 00:00:00'),
-(2, 2, 1800.00, 'Completed', '2025-01-20 00:00:00'),
-(3, 3, 2000.00, 'Completed', '2025-02-10 00:00:00'),
-(4, 4, 1200.00, 'Pending', '2025-02-18 00:00:00'),
-(5, 5, 2500.00, 'Pending', '2025-03-05 00:00:00'),
-(6, 6, 1750.00, 'Completed', '2025-03-22 00:00:00'),
-(7, 7, 3000.00, 'Processing', '2025-04-07 00:00:00'),
-(8, 8, 2200.00, 'Completed', '2025-04-18 00:00:00'),
-(9, 9, 2700.00, 'Completed', '2025-05-02 00:00:00'),
-(10, 10, 2100.00, 'Completed', '2025-05-19 00:00:00'),
-(11, 11, 2600.00, 'Completed', '2025-06-08 00:00:00'),
-(12, 12, 3100.00, 'Completed', '2025-06-24 00:00:00'),
-(13, 13, 1900.00, 'Completed', '2025-07-03 00:00:00'),
-(14, 14, 2300.00, 'Processing', '2025-07-14 00:00:00'),
-(15, 15, 2500.00, 'Completed', '2025-07-21 00:00:00'),
-(16, 1, 1800.00, 'Completed', '2025-07-23 21:08:34'),
-(17, 5, 505.60, 'Pending', '2025-08-28 23:10:03');
+(17, 5, '505.60', 'Pending', '2025-08-28 23:10:03');
 
 -- --------------------------------------------------------
 
@@ -208,22 +185,7 @@ CREATE TABLE `order_items` (
 --
 
 INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `quantity`, `price`) VALUES
-(1, 1, NULL, 2, 750.00),
-(2, 2, NULL, 3, 600.00),
-(3, 3, NULL, 2, 1000.00),
-(4, 4, NULL, 4, 300.00),
-(5, 5, NULL, 5, 500.00),
-(6, 6, NULL, 2, 875.00),
-(7, 7, NULL, 6, 500.00),
-(8, 8, NULL, 4, 550.00),
-(9, 9, NULL, 3, 900.00),
-(10, 10, NULL, 6, 350.00),
-(11, 11, NULL, 4, 90.00),
-(12, 12, NULL, 2, 650.00),
-(13, 13, NULL, 3, 480.00),
-(14, 14, NULL, 1, 7500.00),
-(15, 15, NULL, 2, 4200.00),
-(16, 17, 38, 1, 5.00);
+(16, 17, 38, 1, '5.00');
 
 -- --------------------------------------------------------
 
@@ -236,13 +198,6 @@ CREATE TABLE `password_resets` (
   `token` varchar(255) NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `password_resets`
---
-
-INSERT INTO `password_resets` (`email`, `token`, `created_at`) VALUES
-('msdperera99@gmail.com', '1c2f63bbf2714333412a0ea9aebf1bf2bb0cdcea94ad5ecd41ae11146464d234', '2025-07-31 20:35:34');
 
 -- --------------------------------------------------------
 
@@ -266,11 +221,11 @@ CREATE TABLE `products` (
 --
 
 INSERT INTO `products` (`id`, `name`, `category_id`, `description`, `price`, `stock`, `image`, `is_featured`) VALUES
-(36, 'DDA', 2, 'jj', 100.00, 11, 'uploads/1756136689_The Basic Set of Tools Every Woman Should Own—and….jpeg', 1),
-(37, 'Bolts & Nuts Set', 4, 'l', 2.00, 1, 'uploads/1756136707_12.jpeg', 0),
-(38, 'Dimalsha', 2, ';', 5.00, 4, 'uploads/1756136840_SKIL PWR CORE 20 Brushless 20V 1_2 Inch Drill….jpeg', 1),
-(39, 'll', 1, 'l', 8.00, 8, 'uploads/1756136878_1756136707_12.jpeg', 1),
-(40, 'Sanchana', 5, 'lll', 45.00, 5, 'uploads/1756137357_THE CHALLENGE_After replacing one of the leading….jpeg', 1);
+(36, 'DDA', 2, 'jj', '100.00', 11, 'uploads/1756136689_The Basic Set of Tools Every Woman Should Own—and….jpeg', 1),
+(37, 'Bolts & Nuts Set', 4, 'l', '2.00', 1, 'uploads/1756136707_12.jpeg', 0),
+(38, 'Dimalsha', 2, ';', '5.00', 4, 'uploads/1756136840_SKIL PWR CORE 20 Brushless 20V 1_2 Inch Drill….jpeg', 1),
+(39, 'll', 1, 'l', '8.00', 8, 'uploads/1756136878_1756136707_12.jpeg', 1),
+(40, 'Sanchana', 5, 'lll', '45.00', 5, 'uploads/1756137357_THE CHALLENGE_After replacing one of the leading….jpeg', 1);
 
 -- --------------------------------------------------------
 
@@ -338,8 +293,7 @@ INSERT INTO `users` (`id`, `first_name`, `last_name`, `email`, `password`, `phon
 (2, 'Dunil', 'Gunathilake', 'dunilg@gmail.com', '$2y$10$7/tM79TKzZUqC6FAvDy0wOcGm8fsGLEWtUxZJ23l4P6vKIiZxDAPS', '0123456789', 'individual', '', '', '120 Kaluthara', 'Kaluthara', '13524', 'Sri Lanka', '2025-07-31 23:02:04', '2025-07-31 23:02:04'),
 (3, 'Sanchana', 'Perera', 'msdperera99@gmail.com', '$2y$10$s0mrVK4O/ZwzURU9zYMKeu9F3E9AmWjNXyC2.xmet3OQZWFefagFi', '0766055480', 'individual', '', '', '151 KEPUNGODA PAMUNUGAMA', 'Negombo', '11370', 'Sri Lanka', '2025-07-31 23:05:07', '2025-07-31 23:05:07'),
 (4, 'Pramod', 'Buddkhika', 'lakshan@gmail.com', '$2y$10$B2zhPvZ6LYwZWm29YLAkFOGwMw.XXMMiPBx5Yln6uBKZzPxbo6Dri', '0766055480', 'individual', '', '', '161 / Walasmulla ,Mathara', 'Mathara', '52460', 'Sri Lanka', '2025-08-01 04:34:06', '2025-08-01 04:34:06'),
-(5, 'Sanchana', 'Perera', 'anura@mail.com', '$2y$10$5wdN.8EI/dJoYNFk/9abVe2MvdlcGWmoyuBvJTF.1VHutpRJtOqVy', '+07 660 5548', 'individual', '', '', '151 KEPUNGODA PAMUNUGAMA', 'Negombo', '11370', 'Sri Lanka', '2025-08-25 17:08:47', '2025-08-25 17:08:47'),
-(6, 'dd', 'dd', 'cimola1158@sgatra.com', '$2y$10$1AN5KjQikYZnxhKVkcOCi.qrhADT4ik2WrvstPzIT0S.jpxZKKzpW', '+07 660 5548', 'individual', '', '', 'dd', 'ssaasd', 'd11', 'Sri Lanka', '2025-08-28 05:41:01', '2025-08-28 05:41:01');
+(5, 'Sanchana', 'Perera', 'anura@mail.com', '$2y$10$5wdN.8EI/dJoYNFk/9abVe2MvdlcGWmoyuBvJTF.1VHutpRJtOqVy', '+07 660 5548', 'individual', '', '', '151 KEPUNGODA PAMUNUGAMA', 'Negombo', '11370', 'Sri Lanka', '2025-08-25 17:08:47', '2025-08-25 17:08:47');
 
 -- --------------------------------------------------------
 
@@ -358,6 +312,13 @@ CREATE TABLE `wishlist_items` (
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `admins`
+--
+ALTER TABLE `admins`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `username` (`username`);
 
 --
 -- Indexes for table `cart`
@@ -456,6 +417,12 @@ ALTER TABLE `wishlist_items`
 --
 
 --
+-- AUTO_INCREMENT for table `admins`
+--
+ALTER TABLE `admins`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
 -- AUTO_INCREMENT for table `cart`
 --
 ALTER TABLE `cart`
@@ -536,7 +503,7 @@ ALTER TABLE `cart_items`
 -- Constraints for table `orders`
 --
 ALTER TABLE `orders`
-  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customers` (`id`) ON DELETE SET NULL;
+  ADD CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `users` (`id`) ON DELETE SET NULL;
 
 --
 -- Constraints for table `order_items`

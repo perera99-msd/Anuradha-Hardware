@@ -1,4 +1,6 @@
 <?php
+include('includes/auth_session.php'); // Protects the page
+include('includes/db.php');
 // include('includes/db.php');
 // include('includes/header.php');
 

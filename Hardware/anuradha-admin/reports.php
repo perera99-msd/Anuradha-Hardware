@@ -1,7 +1,8 @@
 <?php
 include('includes/db.php');
 include('includes/header.php');
-
+include('includes/auth_session.php'); // Protects the page
+include('includes/db.php');
 // Handle filters
 $period = $_GET['period'] ?? 'month';
 $type = $_GET['type'] ?? 'orders';

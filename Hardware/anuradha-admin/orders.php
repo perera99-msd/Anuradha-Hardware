@@ -1,7 +1,8 @@
 <?php
 include('includes/db.php');
 include('includes/header.php');
-
+include('includes/auth_session.php'); // Protects the page
+include('includes/db.php');
 // Filters
 $search = $_GET['search'] ?? '';
 $status = $_GET['status'] ?? '';

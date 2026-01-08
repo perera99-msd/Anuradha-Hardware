@@ -1,7 +1,8 @@
 <?php
 include('includes/db.php');
 include('includes/header.php');
-
+include('includes/auth_session.php'); // Protects the page
+include('includes/db.php');
 // Handle form submissions
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Slider Management

@@ -46,5 +46,8 @@
             <!-- <input class="form-control me-2" type="search" placeholder="Search..." aria-label="Search"> -->
         </form>
 
-        <div class="text-white">Admin</div>
+        <div class="text-white">Admin</div><div class="text-white d-flex align-items-center gap-3">
+            <span>Welcome, <?php echo $_SESSION['admin_name'] ?? 'Admin'; ?></span>
+            <a href="logout.php" class="btn btn-sm btn-danger">Logout</a>
+        </div>
     </nav>
